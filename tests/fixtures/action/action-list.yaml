@@ -1,0 +1,16 @@
+actions:
+  -
+    id: '1'
+    parentId: '0'
+    name: 测试1
+    route: '/admin/login'
+    description: 这是一条测试数据
+    sort: 1
+
+  -
+    id: '2'
+    parentId: '0'
+    name: 测试2
+    route: '/admin/logout'
+    description: 这是一条测试数据2
+    sort: 1

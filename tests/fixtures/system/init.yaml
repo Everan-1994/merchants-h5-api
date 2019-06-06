@@ -1,0 +1,210 @@
+admin_users:
+  -
+    id: '1'
+    username: 'admin'
+    realname: 'admin'
+    email: 'admin@douanquan.com'
+    password: '$2y$10$xAneXueqRqgwW0p8WB9VS.5E5HYmSgVZvGTYwkAKE8dYLMUYGSyjS'
+    isEnable: 1
+    createdAt: '2018-10-18 10:18:18'
+    updatedAt: '2018-10-18 10:18:18'
+
+
+
+admin_roles:
+  -
+    id: '1'
+    name: '超级管理员'
+    isSuper: 1
+    createdAt: '2018-10-19 16:52:10'
+    updatedAt: '2018-10-19 16:52:10'
+
+
+admin_role_users:
+  -
+    adminRoleId: '1'
+    adminUserId: '1'
+    createdAt: '2018-10-18 10:18:18'
+    updatedAt: '2018-10-18 10:18:18'
+
+
+actions:
+  -
+    id: 46
+    parentId: 0
+    name: '权限'
+    route:
+    description: '仅开发人员使用'
+    sort: 9
+    createdAt: '2018-11-01 14:00:19'
+    updatedAt: '2018-11-01 15:45:53'
+
+  -
+    id: 48
+    parentId: 46
+    name: '查看权限列表'
+    route: 'Get:/admin/actions'
+    description:
+    sort: 1
+    createdAt: '2018-11-01 14:05:11'
+    updatedAt: '2018-11-01 15:57:13'
+
+  -
+    id: 49
+    parentId: 46
+    name: '创建权限'
+    route: Post:/admin/actions
+    description:
+    sort: 2
+    createdAt: '2018-11-01 14:06:01'
+    updatedAt: '2018-11-01 16:06:12'
+
+  -
+    id: 50
+    parentId: 46
+    name: '删除权限'
+    route: 'Delete:/admin/actions'
+    description:
+    sort: 4
+    createdAt: '2018-11-01 14:07:28'
+    updatedAt: '2018-11-01 16:06:22'
+
+  -
+    id: 52
+    parentId: 0
+    name: '角色'
+    route:
+    description: '权限通过角色进行分配'
+    sort: 8
+    createdAt: '2018-11-01 14:17:04'
+    updatedAt: '2018-11-01 15:45:44'
+
+  -
+    id: 53
+    parentId: 52
+    name: '查看角色列表'
+    route: 'Get:/admin/roles'
+    description:
+    sort: 1
+    createdAt: '2018-11-01 14:18:29'
+    updatedAt: '2018-11-01 15:56:46'
+
+  -
+    id: 54
+    parentId: 52
+    name: '查看角色详情'
+    route: 'Get:/admin/roles/{id:[0-9]+}'
+    description:
+    sort: 2
+    createdAt: '2018-11-01 14:19:03'
+    updatedAt: '2018-11-01 15:56:51'
+
+  -
+    id: 55
+    parentId: 52
+    name: '创建角色'
+    route: 'Post:/admin/roles'
+    description:
+    sort: 3
+    createdAt: '2018-11-01 14:19:17'
+    updatedAt: '2018-11-01 15:56:57'
+
+  -
+    id: 56
+    parentId: 52
+    name: '更新角色'
+    route: 'Put:/admin/roles'
+    description:
+    sort: 4
+    createdAt: '2018-11-01 14:19:29'
+    updatedAt: '2018-11-01 15:57:01'
+
+  -
+    id: 57
+    parentId: 52
+    name: '删除角色'
+    route: 'Delete:/admin/roles'
+    description:
+    sort: 5
+    createdAt: '2018-11-01 14:19:41'
+    updatedAt: '2018-11-01 15:57:06'
+
+  -
+    id: 59
+    parentId: 0
+    name: '成员'
+    route:
+    description: '后台管理员'
+    sort: 7
+    createdAt: '2018-11-01 14:23:20'
+    updatedAt: '2018-11-01 15:45:33'
+
+  -
+    id: 60
+    parentId: 59
+    name: '查看成员列表'
+    route: 'Get:/admin/members'
+    description:
+    sort: 1
+    createdAt: '2018-11-01 14:24:17'
+    updatedAt: '2018-11-01 15:55:36'
+
+  -
+    id: 61
+    parentId: 59
+    name: '查看成员详情'
+    route: 'Get:/admin/members/{id}'
+    description:
+    sort: 2
+    createdAt: '2018-11-01 14:24:32'
+    updatedAt: '2018-11-01 15:55:42'
+
+  -
+    id: 62
+    parentId: 59
+    name: '创建成员'
+    route: 'Post:/admin/members'
+    description:
+    sort: 3
+    createdAt: '2018-11-01 14:25:07'
+    updatedAt: '2018-11-01 15:56:05'
+
+  -
+    id: 63
+    parentId: 59
+    name: '更新成员'
+    route: 'Put:/admin/members'
+    description:
+    sort: 4
+    createdAt: '2018-11-01 14:25:19'
+    updatedAt: '2018-11-01 15:56:12'
+
+  -
+    id: 64
+    parentId: 59
+    name: '删除成员'
+    route: 'Delete:/admin/members'
+    description:
+    sort: 5
+    createdAt: '2018-11-01 14:27:21'
+    updatedAt: '2018-11-01 15:56:23'
+
+  -
+    id: 65
+    parentId: 59
+    name: '禁用、启用成员账号'
+    route: 'Patch:/admin/members'
+    description:
+    sort: 6
+    createdAt: '2018-11-01 14:37:31'
+    updatedAt: '2018-11-01 15:56:26'
+
+  -
+    id: 90
+    parentId: 46
+    name: '更新权限'
+    route: 'Put:/admin/actions'
+    description:
+    sort: 3
+    createdAt: '2018-11-01 15:21:23'
+    updatedAt: '2018-11-01 16:06:17'

@@ -1,0 +1,47 @@
+admin_roles:
+  -
+    id: '1'
+    name: 管理员
+    isSuper: 1
+    createdAt: '2018-10-19 16:52:10'
+    updatedAt: '2018-10-19 16:52:10'
+
+  -
+    id: '2'
+    name: 测试角色
+    isSuper: 0
+    createdAt: '2018-10-19 16:52:10'
+    updatedAt: '2018-10-19 16:52:10'
+
+
+admin_role_actions:
+  -
+    adminRoleId: '2'
+    actionId: 1
+    createdAt: '2018-10-19 16:52:10'
+    updatedAt: '2018-10-19 16:52:10'
+
+
+actions:
+  -
+    id: 1
+    parentId: 0
+    name: '文章'
+    route: '/admin/articles'
+    description: '文章模块'
+    sort: 0
+
+  -
+    id: 2
+    parentId: 1
+    name: '编辑'
+    route: '/admin/articles/edit'
+    description: '文章编辑'
+    sort: 1
+
+  - id: 3
+    parentId: 1
+    name: '删除'
+    route: '/admin/articles/delete'
+    description: '文章删除'
+    sort: 1
