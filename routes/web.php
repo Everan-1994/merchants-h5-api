@@ -113,8 +113,13 @@ $router->group([
     // 微信授权
     $router->get('oauth', 'AuthenticationController@oauth');
 
-    $router->get('user', 'AuthenticationController@user');
+    $router->get('oauth_callback', 'AuthenticationController@oauthCallback');
 
     $router->get('menu', 'AuthenticationController@menu');
-    
+
+    // 需要授权才能访问
+    $router->group(['middleware' => ['auth:user']], function ($router) {
+
+    });
+
 });

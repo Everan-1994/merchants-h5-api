@@ -32,16 +32,27 @@ class AuthenticationController extends Controller
 
     public function oauth(Request $request)
     {
-        $response = $this->app->oauth->scopes(['snsapi_userinfo'])->redirect($request->url());
+        $response = $this->app->oauth->scopes(['snsapi_userinfo'])
+            ->redirect(env('APP_URL') . '/api/oauth_callback?back_url=' . urlencode($request->fullUrl()));
 
         return $response;
     }
 
-    public function user()
+    public function oauthCallback(Request $request)
     {
+        // 获取发起授权的当前页面
+        $target_url = $request->exists('back_url') ? urldecode($request->input('back_url')) : '/';
+
+        // 获取授权用户信息
         $user = $this->app->oauth->user();
 
-        return response($user);
+        // 
+
+        return response()->json([
+            'target_url' => $target_url,
+            'openid' => $user->openid,
+            'openid2' => $user['openid']
+        ], 200);
     }
 
     public function menu()
