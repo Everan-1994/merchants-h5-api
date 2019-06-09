@@ -105,6 +105,8 @@ $router->group([
     $router->options('/{path:.*}', function ($path) {
     });
 
+    $router->get('wechat', 'AuthenticationController@server');
+
     // 微信授权
     $router->get('oauth', 'AuthenticationController@oauth');
 
