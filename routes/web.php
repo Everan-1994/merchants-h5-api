@@ -110,7 +110,7 @@ $router->group([
 
     $router->get('user', 'AuthenticationController@user');
 
-    $router->ts('ts', function () {
+    $router->get('ts', function () {
         return 'success';
     });
 });
