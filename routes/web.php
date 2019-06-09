@@ -98,6 +98,7 @@ $router->group([
 /* @var \Laravel\Lumen\Routing\Router $router */
 $router->group([
     'prefix' => 'api', // 前缀
+    'namespace' => 'Api'
 ], function ($router) {
     /* @var \Laravel\Lumen\Routing\Router $router */
 
