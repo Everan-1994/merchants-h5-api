@@ -33,7 +33,7 @@ class AuthenticationController extends Controller
     {
         $response = $this->app->oauth->scopes(['snsapi_userinfo'])->redirect(env('APP_URL') . '/api/user');
 
-        dd($response);
+        return $response;
     }
 
     public function user()
