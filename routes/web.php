@@ -108,6 +108,6 @@ $router->group([
     // 微信授权
     $router->get('oauth', 'AuthenticationController@oauth');
 
-    $router->get('ts', 'AuthenticationController@ts');
+    $router->get('user', 'AuthenticationController@user');
 
 });

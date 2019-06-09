@@ -26,8 +26,4 @@ class AuthenticationController extends Controller
         dd($user);
     }
 
-    public function ts()
-    {
-        echo 123;
-    }
 }
