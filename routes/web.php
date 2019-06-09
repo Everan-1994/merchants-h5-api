@@ -97,8 +97,17 @@ $router->group([
 
 /* @var \Laravel\Lumen\Routing\Router $router */
 $router->group([
-    'prefix' => '', // 前缀
+    'prefix' => 'api', // 前缀
 ], function ($router) {
     /* @var \Laravel\Lumen\Routing\Router $router */
+
+    // 防止找不到 options 路由而报跨域错误
+    $router->options('/{path:.*}', function ($path) {
+    });
+
+    // 微信授权
+    $router->get('oauth', 'AuthenticationController@oauth');
+
+    $router->get('user', 'AuthenticationController@user');
 
 });

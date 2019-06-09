@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFastPregnancyTable extends Migration
+class CreateDbInitTable extends Migration
 {
     /**
      * Run the migrations.
@@ -87,8 +87,8 @@ class CreateFastPregnancyTable extends Migration
         Schema::create('blocks', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->comment('名称');
-            $table->string('description')->nullable()->comment('名称');
-            $table->string('flag');
+            $table->string('front_cover')->comment('封面');
+            $table->integer('watch_times')->default(0)->comment('观看次数');
             $table->timestamp('createdAt')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updatedAt')->default(\DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
             $table->timestamp('deletedAt')->nullable();
@@ -99,9 +99,9 @@ class CreateFastPregnancyTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('blockId')->comment('区块id');
             $table->string('title')->comment('名称');
-            $table->text('description')->nullable()->comment('描述');
-            $table->string('url')->comment('链接地址');
-            $table->string('imagePath')->comment('图片路径');
+            $table->string('front_cover')->comment('封面');
+            $table->string('video')->comment('视频地址');
+            $table->integer('watch_times')->default(0)->comment('观看次数');
             $table->integer('sort')->default(0)->comment('排序');
             $table->timestamp('createdAt')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updatedAt')->default(\DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));

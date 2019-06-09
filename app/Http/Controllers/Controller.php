@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Exception;
+
 class Controller extends BaseController
 {
     /**
@@ -56,9 +57,8 @@ class Controller extends BaseController
 
     /**
      * 根据异常码抛出异常
-     * 
-     * @param int $code: 异常码
-     * @throws Exeption
+     * @param $code
+     * @throws Exception
      */
     public function throwExeptionByCode($code)
     {

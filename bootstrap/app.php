@@ -96,12 +96,13 @@ $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
-$app->register(Jacobcyl\AliOSS\AliOssServiceProvider::class);
 $app->register(App\Providers\OperationServiceProvide::class);
+$app->register(Overtrue\LaravelWeChat\ServiceProvider::class);
 
 /**
  * Config
  */
+$app->configure('errorCode');
 $app->configure('allowOriginHost');
 $app->configure('filesystems');
 /*
