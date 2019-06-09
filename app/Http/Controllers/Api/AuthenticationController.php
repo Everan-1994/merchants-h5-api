@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller;
 
 class AuthenticationController extends Controller
@@ -29,9 +30,9 @@ class AuthenticationController extends Controller
         return $this->app->server->serve();
     }
 
-    public function oauth()
+    public function oauth(Request $request)
     {
-        $response = $this->app->oauth->scopes(['snsapi_userinfo'])->redirect(env('APP_URL') . '/api/user');
+        $response = $this->app->oauth->scopes(['snsapi_userinfo'])->redirect($request->url());
 
         return $response;
     }
@@ -39,7 +40,41 @@ class AuthenticationController extends Controller
     public function user()
     {
         $user = $this->app->oauth->user();
-        dd($user);
+
+        return response($user);
+    }
+
+    public function menu()
+    {
+        $buttons = [
+            [
+                "type" => "view",
+                "name" => "授权页",
+                "url"  => env('APP_URL') . '/api/oauth'
+            ],
+            [
+                "type" => "view",
+                "name" => "授权信息",
+                "url"  =>  env('APP_URL') . '/api/user'
+            ],
+            [
+                "name" => "其他",
+                "sub_button"  => [
+                    [
+                        "type" => "view",
+                        "name" => "送货单表",
+                        "url"  => "http://www.baidu.com/"
+                    ],
+                    [
+                        "type" => "view",
+                        "name" => "个人中心",
+                        "url"  => "http://www.baidu.com/"
+                    ],
+                ]
+            ],
+        ];
+
+        $this->app->menu->create($buttons);
     }
 
 }
