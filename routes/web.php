@@ -96,7 +96,7 @@ $router->group([
 });
 
 // 微信认证
-$router->get('wechat', 'AuthenticationController@server');
+$router->any('wechat', 'AuthenticationController@server');
 
 /* @var \Laravel\Lumen\Routing\Router $router */
 $router->group([
