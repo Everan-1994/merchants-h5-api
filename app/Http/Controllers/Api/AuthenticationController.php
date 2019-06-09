@@ -44,14 +44,13 @@ class AuthenticationController extends Controller
         $target_url = $request->exists('back_url') ? urldecode($request->input('back_url')) : '/';
 
         // 获取授权用户信息
-        $user = $this->app->oauth->user();
+        $user = $this->app->oauth->user()->toArray();
 
-        // 
+        //
 
         return response()->json([
             'target_url' => $target_url,
-            'openid' => $user->openid,
-            'openid2' => $user['openid']
+            'user' => $user
         ], 200);
     }
 
