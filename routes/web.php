@@ -95,6 +95,9 @@ $router->group([
     });
 });
 
+// 微信认证
+$router->get('wechat', 'AuthenticationController@server');
+
 /* @var \Laravel\Lumen\Routing\Router $router */
 $router->group([
     'prefix' => 'api', // 前缀
@@ -105,8 +108,6 @@ $router->group([
     // 防止找不到 options 路由而报跨域错误
     $router->options('/{path:.*}', function ($path) {
     });
-
-    $router->get('wechat', 'AuthenticationController@server');
 
     // 微信授权
     $router->get('oauth', 'AuthenticationController@oauth');
