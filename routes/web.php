@@ -115,7 +115,6 @@ $router->group([
 
     $router->get('user', 'AuthenticationController@user');
 
-    $router->get('ts', function () {
-        return 'success';
-    });
+    $router->get('menu', 'AuthenticationController@menu');
+    
 });
