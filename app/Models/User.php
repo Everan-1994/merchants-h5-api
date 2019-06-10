@@ -90,4 +90,9 @@ class User extends BaseModel implements JWTSubject, Authenticatable
     public function getRememberTokenName()
     {
     }
+
+//    public function checkIns()
+//    {
+//        return $this->hasMany(CheckIn::class, 'user_id', 'id');
+//    }
 }

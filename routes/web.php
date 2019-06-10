@@ -115,11 +115,19 @@ $router->group([
 
     $router->get('oauth_callback', 'AuthenticationController@oauthCallback');
 
-    $router->get('menu', 'AuthenticationController@menu');
+    // $router->get('menu', 'AuthenticationController@menu');
 
     // 需要授权才能访问
     $router->group(['middleware' => ['auth:user']], function ($router) {
-
+        /* @var \Laravel\Lumen\Routing\Router $router */
+        $router->post('check_in', 'CheckInController@add'); // 签到
+        $router->get('check_in', 'CheckInController@index'); // 签到列表
     });
+
+    $router->get('check_in_rule', 'CheckInController@checkInRule'); // 签到规则
+
+//    $router->get('ts', function () {
+//        echo \Carbon\Carbon::parse('2019-06-01')->subDay()->toDateString();
+//    });
 
 });

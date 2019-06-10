@@ -91,9 +91,9 @@ class AuthenticationController extends Controller
             'data'      => [
                 'target_url' => $target_url,
                 'user'       => [
-                    'name'   => $user['nickname'],
+                    'name'   => $user['name'],
                     'sex'    => $user['sex'],
-                    'avatar' => $user['headimgurl'],
+                    'avatar' => $user['avatar'],
                     'openid' => $user['openid'],
                 ],
                 'token'     => $this->respondWithToken($token),
