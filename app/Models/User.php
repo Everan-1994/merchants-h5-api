@@ -14,16 +14,16 @@ class User extends BaseModel implements JWTSubject, Authenticatable
     const FREEZE = 0; // 冻结
 
     protected $fillable = [
-        'name', 'sex', 'status', 'avatar', 'openid', 'password',
+        'name', 'sex', 'status', 'avatar', 'openid',
     ];
 
     protected $casts = [
         'status' => 'boolean',
     ];
 
-    protected $hidden = [
-        'password',
-    ];
+//    protected $hidden = [
+//        'password',
+//    ];
 
     public function getAuthIdentifierName()
     {
