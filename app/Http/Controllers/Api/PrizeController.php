@@ -9,7 +9,10 @@ class PrizeController extends Controller
 {
     public function index()
     {
-        $prizes = Prize::query()->select(['prize_name', 'prize_num', 'prize_image', 'probability'])->get();
+        $prizes = Prize::query()
+            ->select(['prize_name', 'prize_num', 'prize_image', 'probability'])
+            ->where('status', Prize::ACTIVE)
+            ->get();
 
         return response()->json($prizes);
     }

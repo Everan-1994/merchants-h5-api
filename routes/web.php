@@ -125,6 +125,7 @@ $router->group([
     });
 
     $router->get('check_in_rule', 'CheckInController@checkInRule'); // 签到规则
+    $router->get('prize', 'PrizeController@index'); // 奖品列表
 
 //    $router->get('ts', function () {
 //        echo \Carbon\Carbon::parse('2019-06-01')->subDay()->toDateString();
