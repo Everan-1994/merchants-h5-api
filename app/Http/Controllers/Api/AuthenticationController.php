@@ -38,7 +38,9 @@ class AuthenticationController extends Controller
             ->redirect();
         // env('APP_URL') . '/api/oauth_callback?back_url=' . urlencode($request->fullUrl())
 
-        return $response;
+        return response()->json([
+            'response' => $response
+        ]);
     }
 
     public function oauthCallback(Request $request)
