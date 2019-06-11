@@ -32,15 +32,13 @@ class AuthenticationController extends Controller
         return $this->app->server->serve();
     }
 
-    public function oauth()
+    public function oauth(Request $request)
     {
         $response = $this->app->oauth->scopes(['snsapi_userinfo'])
-            ->redirect();
+            ->redirect($request->url());
         // env('APP_URL') . '/api/oauth_callback?back_url=' . urlencode($request->fullUrl())
 
-        return response()->json([
-            'response' => $response
-        ]);
+        return $response;
     }
 
     public function oauthCallback(Request $request)
