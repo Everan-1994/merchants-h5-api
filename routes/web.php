@@ -102,7 +102,8 @@ $router->post('wechat', 'Api\AuthenticationController@server');
 /* @var \Laravel\Lumen\Routing\Router $router */
 $router->group([
     'prefix' => 'api', // 前缀
-    'namespace' => 'Api'
+    'namespace' => 'Api',
+    'middleware' => ['cors']
 ], function ($router) {
     /* @var \Laravel\Lumen\Routing\Router $router */
 

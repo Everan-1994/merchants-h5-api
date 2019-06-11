@@ -72,13 +72,14 @@ $app->singleton('filesystem', function ($app) {
 */
 
 $app->middleware([
-    App\Http\Middleware\EnableCrossRequest::class, // 解决跨域
+    // App\Http\Middleware\EnableCrossRequest::class, // 解决跨域
 ]);
 
 $app->routeMiddleware([
     'auth'          => App\Http\Middleware\Authenticate::class,
     'refresh.token' => App\Http\Middleware\RefreshToken::class, // 无断点刷新 token
     'permission'    => App\Http\Middleware\AdminPermission::class,
+    'cors'          => \Barryvdh\Cors\HandleCors::class, // 解决跨域
 ]);
 
 /*
@@ -102,8 +103,8 @@ $app->register(Overtrue\LaravelWeChat\ServiceProvider::class);
 /**
  * Config
  */
+$app->configure('cors');
 $app->configure('errorCode');
-$app->configure('allowOriginHost');
 $app->configure('filesystems');
 /*
 |--------------------------------------------------------------------------
