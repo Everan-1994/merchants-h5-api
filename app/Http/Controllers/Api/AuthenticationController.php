@@ -41,8 +41,10 @@ class AuthenticationController extends Controller
         return $response;
     }
 
-    public function getData($code)
+    public function getData(Request $request)
     {
+        $code = $request->input('code');
+
         $data = $this->app->auth->session($code);
 
         return $data;
