@@ -45,9 +45,11 @@ class AuthenticationController extends Controller
     {
         $code = $request->input('code');
 
-        $access_token = $this->app->oauth->getAccessToken($code);
+        // $access_token = $this->app->oauth->getAccessToken($code);
 
-        return $this->app->oauth->getUserByToken($access_token);
+        $wx_user = $this->app->oauth->user()->getOriginal()->toArray();
+
+        return response()->json($wx_user);
     }
 
     public function oauthCallback(Request $request)
