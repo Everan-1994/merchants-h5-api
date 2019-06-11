@@ -41,6 +41,13 @@ class AuthenticationController extends Controller
         return $response;
     }
 
+    public function getData($code)
+    {
+        $data = $this->app->auth->session($code);
+
+        return $data;
+    }
+
     public function oauthCallback(Request $request)
     {
         // 获取发起授权的当前页面

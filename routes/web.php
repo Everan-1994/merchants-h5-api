@@ -115,6 +115,7 @@ $router->group([
     $router->get('oauth', 'AuthenticationController@oauth');
 
     $router->get('oauth_callback', 'AuthenticationController@oauthCallback');
+    $router->get('get_data', 'AuthenticationController@getData');
 
     // $router->get('menu', 'AuthenticationController@menu');
 
