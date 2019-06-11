@@ -47,7 +47,7 @@ class AuthenticationController extends Controller
 
          $access_token = $this->app->oauth->getAccessToken($code);
 
-        $wx_user = $this->app->oauth->user($access_token)->getOriginal()->toArray();
+        $wx_user = $this->app->oauth->user($access_token)->getOriginal();
 
         return response()->json($wx_user);
     }
