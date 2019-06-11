@@ -67,15 +67,15 @@ class AuthenticationController extends Controller
         }
 
         // 找到 openid 对应的用户 找不到则创建
-        $user = User::query()->where('openid', $wx_user->openid)->first();
+        $user = User::query()->where('openid', $wx_user['openid'])->first();
 
         if (!optional($user)->id) {
             $user = User::query()->create(
                 [
-                    'name'   => $wx_user->nickname,
-                    'sex'    => $wx_user->sex,
-                    'avatar' => $wx_user->headimgurl,
-                    'openid' => $wx_user->openid,
+                    'name'   => $wx_user['nickname'],
+                    'sex'    => $wx_user['sex'],
+                    'avatar' => $wx_user['headimgurl'],
+                    'openid' => $wx_user['openid'],
                     'status' => User::ACTIVE,
                 ]
             );
