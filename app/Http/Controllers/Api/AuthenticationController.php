@@ -36,26 +36,23 @@ class AuthenticationController extends Controller
     {
         $response = $this->app->oauth->scopes(['snsapi_userinfo'])
             ->redirect(urldecode($request->input('back_url')));
-        // env('APP_URL') . '/api/oauth_callback?back_url=' . urlencode($request->fullUrl())
 
         return $response;
     }
 
-    public function getData(Request $request)
+    public function login(Request $request)
     {
+
+        if (!$request->exists('code')) {
+            return response()->json([
+                'errorCode' => 1,
+                'message'   => 'code 参数 缺失',
+            ]);
+        }
+
         $code = $request->input('code');
 
-         $access_token = $this->app->oauth->getAccessToken($code);
-
-        $wx_user = $this->app->oauth->user($access_token)->getOriginal();
-
-        return response()->json($wx_user);
-    }
-
-    public function oauthCallback(Request $request)
-    {
-        // 获取发起授权的当前页面
-        $target_url = $request->exists('back_url') ? urldecode($request->input('back_url')) : '/';
+        $access_token = $this->app->oauth->getAccessToken($code);
 
         // 获取授权用户信息
         if (env('APP_ENV') == 'local') {
@@ -66,19 +63,19 @@ class AuthenticationController extends Controller
                 'openid'     => 'oT9bx0xpgi1l1NJNPgtyvDKDfL1Q',
             ];
         } else {
-            $wx_user = $this->app->oauth->user()->getOriginal()->toArray();
+            $wx_user = $this->app->oauth->user($access_token)->getOriginal();
         }
 
         // 找到 openid 对应的用户 找不到则创建
-        $user = User::query()->where('openid', $wx_user['openid'])->first();
+        $user = User::query()->where('openid', $wx_user->openid)->first();
 
         if (!optional($user)->id) {
             $user = User::query()->create(
                 [
-                    'name'   => $wx_user['nickname'],
-                    'sex'    => $wx_user['sex'],
-                    'avatar' => $wx_user['headimgurl'],
-                    'openid' => $wx_user['openid'],
+                    'name'   => $wx_user->nickname,
+                    'sex'    => $wx_user->sex,
+                    'avatar' => $wx_user->headimgurl,
+                    'openid' => $wx_user->openid,
                     'status' => User::ACTIVE,
                 ]
             );
@@ -88,9 +85,9 @@ class AuthenticationController extends Controller
             $this->logout();
 
             return response()->json([
-                'errorCode' => 0,
+                'errorCode' => 1,
                 'message'   => '账号已被冻结，请联系管理员。',
-            ], 200);
+            ]);
         }
 
         // 给用户授权 token
@@ -98,19 +95,18 @@ class AuthenticationController extends Controller
 
 
         return response()->json([
-            'errorCode' => 1,
+            'errorCode' => 0,
             'message'   => 'success',
             'data'      => [
-                'target_url' => $target_url,
                 'user'       => [
                     'name'   => $user['name'],
                     'sex'    => $user['sex'],
                     'avatar' => $user['avatar'],
                     'openid' => $user['openid'],
                 ],
-                'token'     => $this->respondWithToken($token),
-            ]
-        ], 200);
+                'token'      => $this->respondWithToken($token),
+            ],
+        ]);
     }
 
     protected function respondWithToken($token)
@@ -126,9 +122,9 @@ class AuthenticationController extends Controller
         Auth::guard('user')->logout();
 
         return response()->json([
-            'errorCode' => 1,
+            'errorCode' => 0,
             'message'   => '退出成功',
-        ], 200);
+        ]);
     }
 
     public function menu()

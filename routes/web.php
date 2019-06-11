@@ -114,8 +114,7 @@ $router->group([
     // 微信授权
     $router->get('oauth', 'AuthenticationController@oauth');
 
-    $router->get('oauth_callback', 'AuthenticationController@oauthCallback');
-    $router->get('get_data', 'AuthenticationController@getData');
+    $router->get('login', 'AuthenticationController@login');
 
     // $router->get('menu', 'AuthenticationController@menu');
 
