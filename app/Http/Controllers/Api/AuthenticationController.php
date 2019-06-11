@@ -45,9 +45,9 @@ class AuthenticationController extends Controller
     {
         $code = $request->input('code');
 
-        $data = $this->app->oauth->getAccessToken($code);
+        $access_token = $this->app->oauth->getAccessToken($code);
 
-        return $data;
+        return $this->app->oauth->getUserByToken($access_token);
     }
 
     public function oauthCallback(Request $request)
