@@ -45,7 +45,7 @@ class AuthenticationController extends Controller
     {
         $code = $request->input('code');
 
-        $data = $this->app->auth->session($code);
+        $data = $this->app->oauth->session($code);
 
         return $data;
     }
