@@ -118,15 +118,22 @@ $router->group([
 
     // $router->get('menu', 'AuthenticationController@menu');
 
-    // 需要授权才能访问
+    // 需要授权登录才能访问
     $router->group(['middleware' => ['auth:user']], function ($router) {
         /* @var \Laravel\Lumen\Routing\Router $router */
         $router->post('check_in', 'CheckInController@add'); // 签到
         $router->get('check_in', 'CheckInController@index'); // 签到列表
+
+        $router->post('winning_info', 'WinningController@add'); // 录入中奖信息
+        $router->get('winning_info/{id}', 'WinningController@getWinningInfo'); // 中奖信息
+
+        $router->post('activity_sign_up', 'ActivitySignUpController@add'); // 活动报名
     });
 
     $router->get('check_in_rule', 'CheckInController@checkInRule'); // 签到规则
     $router->get('prize', 'PrizeController@index'); // 奖品列表
+    $router->get('activity', 'ActivityController@index'); // 活动列表
+    $router->get('activity/{id}', 'ActivityController@getActivityDetail'); // 活动详情
 
 //    $router->get('ts', function () {
 //        echo \Carbon\Carbon::parse('2019-06-01')->subDay()->toDateString();

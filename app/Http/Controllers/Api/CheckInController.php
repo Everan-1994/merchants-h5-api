@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\CheckInResource;
+use App\Http\Resources\ApiResources\CheckInResource;
 use App\Models\CheckIn;
 use App\Models\Others;
 use Carbon\Carbon;
@@ -39,16 +39,20 @@ class CheckInController extends Controller
         // 当日 日期 y-m-d
         $today = Carbon::now()->toDateString();
 
+        // 本次是第几次签到
+        $check_num = $this->getPrevCheckIn();
+
         CheckIn::query()->create([
             'user_id'        => $this->user_id,
             'status'         => CheckIn::NO_LOTTERY,
             'check_in_time'  => $today,
-            'check_in_times' => $this->getPrevCheckIn(),
+            'check_in_times' => $check_num,
         ]);
 
         return response()->json([
             'errorCode' => 0,
             'messages'  => '签到成功',
+            'check_num' => $check_num
         ]);
     }
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\ApiResources;
 
+use App\Http\Resources\Resource;
 use App\Models\CheckIn;
 use Carbon\Carbon;
 

@@ -4,8 +4,8 @@ namespace App\Models;
 
 class Prize extends ApiBaseModel
 {
-    const ACTIVE = 1; // 激活
-    const FREEZE = 0; // 冻结
+    const ACTIVE = 1; // 奖品
+    const FREEZE = 0; // 非奖品
 
     protected $fillable = [
         'prize_name', 'prize_num', 'prize_image', 'probability', 'status'

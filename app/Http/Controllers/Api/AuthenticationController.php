@@ -42,18 +42,6 @@ class AuthenticationController extends Controller
 
     public function login(Request $request)
     {
-
-        if (!$request->exists('code')) {
-            return response()->json([
-                'errorCode' => 1,
-                'message'   => 'code 参数 缺失',
-            ]);
-        }
-
-        $code = $request->input('code');
-
-        $access_token = $this->app->oauth->getAccessToken($code);
-
         // 获取授权用户信息
         if (env('APP_ENV') == 'local') {
             $wx_user = [
@@ -63,6 +51,17 @@ class AuthenticationController extends Controller
                 'openid'     => 'oT9bx0xpgi1l1NJNPgtyvDKDfL1Q',
             ];
         } else {
+            if (!$request->exists('code')) {
+                return response()->json([
+                    'errorCode' => 1,
+                    'message'   => 'code 参数 缺失',
+                ]);
+            }
+
+            $code = $request->input('code');
+
+            $access_token = $this->app->oauth->getAccessToken($code);
+
             $wx_user = $this->app->oauth->user($access_token)->getOriginal();
         }
 
