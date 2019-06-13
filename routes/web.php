@@ -101,9 +101,9 @@ $router->post('wechat', 'Api\AuthenticationController@server');
 
 /* @var \Laravel\Lumen\Routing\Router $router */
 $router->group([
-    'prefix' => 'api', // 前缀
-    'namespace' => 'Api',
-    'middleware' => ['cors']
+    'prefix'     => 'api', // 前缀
+    'namespace'  => 'Api',
+    'middleware' => ['cors'],
 ], function ($router) {
     /* @var \Laravel\Lumen\Routing\Router $router */
 
@@ -127,13 +127,33 @@ $router->group([
         $router->post('winning_info', 'WinningController@add'); // 录入中奖信息
         $router->get('winning_info/{id}', 'WinningController@getWinningInfo'); // 中奖信息
 
+        $router->get('activity/{id}', 'ActivityController@getActivityDetail'); // 活动详情
         $router->post('activity_sign_up', 'ActivitySignUpController@add'); // 活动报名
+
+        $router->post('try_use', 'UseSignUpController@add'); // 试用申请
+        $router->get('try_use/{id}', 'TryUseController@getTryUseDetail'); // 试用产品详情
+
+        $router->post('report', 'ExperienceReportController@addReport'); // 填写心得
+        $router->get('report/{id}', 'ExperienceReportController@getReport'); // 获取报告
+
+        $router->post('topic/comment', 'TopicController@commentTopic'); // 评论话题
+        $router->delete('topic/comment/{id}', 'TopicController@deleteTopicCommentById'); // 删除评论
+        $router->get('topic/{id}', 'TopicController@getTopicDetail'); // 话题详情
+
+        $router->patch('my/info', 'MemberController@updateUserInfo'); // 更新个人信息
+        $router->get('my/report', 'MemberController@myReport'); // 我的报告
+
+        $router->post('suggest', 'MemberController@submitSuggest'); // 关于我们
+        $router->post('upload', 'ExperienceReportController@uploads'); // 图片上传
     });
 
     $router->get('check_in_rule', 'CheckInController@checkInRule'); // 签到规则
+    $router->get('about_us', 'MemberController@aboutUs'); // 关于我们
     $router->get('prize', 'PrizeController@index'); // 奖品列表
     $router->get('activity', 'ActivityController@index'); // 活动列表
-    $router->get('activity/{id}', 'ActivityController@getActivityDetail'); // 活动详情
+    $router->get('try_use', 'TryUseController@index'); // 试用产品列表
+    $router->get('topic', 'TopicController@index'); // 话题列表
+
 
 //    $router->get('ts', function () {
 //        echo \Carbon\Carbon::parse('2019-06-01')->subDay()->toDateString();

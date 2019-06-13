@@ -21,7 +21,9 @@ class CreateTryUsesTable extends Migration
             $table->decimal('price', 10, 2)->comment('价格');
             $table->timestamp('apply_start')->default(\DB::raw('CURRENT_TIMESTAMP'))->comment('报名时间开始');
             $table->timestamp('apply_end')->default(\DB::raw('CURRENT_TIMESTAMP'))->comment('报名时间结束');
-            $table->string('activity_intro')->comment('活动介绍');
+            $table->string('product_intro')->comment('产品介绍');
+            $table->integer('sort')->default(0)->comment('排序');
+            $table->tinyInteger('status')->default(1)->comment('状态：0关闭、1正常');
             $table->timestamps();
         });
     }

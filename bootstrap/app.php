@@ -100,6 +100,7 @@ $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(App\Providers\OperationServiceProvide::class);
 $app->register(Overtrue\LaravelWeChat\ServiceProvider::class);
 $app->register(Barryvdh\Cors\ServiceProvider::class);
+$app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);
 
 /**
  * Config

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSuggestsTable extends Migration
+class CreateCommentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateSuggestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('suggests', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('user_name')->comment('姓名');
-            $table->string('user_tel', 15)->comment('手机号');
-            $table->string('message')->comment('留言');
+            $table->unsignedInteger('topic_id');
+            $table->foreign('topic_id')->references('id')->on('topics')->onDelete('cascade');
+            $table->string('comment')->comment('评论内容');
+            $table->integer('like_times')->default(0)->comment('点赞次数');
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateSuggestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('suggests');
+        Schema::dropIfExists('comments');
     }
 }

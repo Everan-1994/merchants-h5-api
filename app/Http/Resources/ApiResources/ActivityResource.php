@@ -11,12 +11,6 @@ class ActivityResource extends Resource
     const IN_PROGRESS = 1;
     const END = 2;
 
-    public static $activityApplyStatus = [
-        self::NOT_STARTED => '未开始',
-        self::IN_PROGRESS => '进行中',
-        self::END         => '已结束',
-    ];
-
     /**
      * Transform the resource into an array.
      *
@@ -39,7 +33,7 @@ class ActivityResource extends Resource
                 'content'        => $this->content
             ]),
             'signs'                 => $this->whenLoaded('signs'),
-            'reports'               => $this->whenLoaded('reports'),
+            'reports'               => ExperienceReportResource::collection($this->whenLoaded('reports')),
         ];
     }
 
@@ -79,10 +73,10 @@ class ActivityResource extends Resource
         $start_date = Carbon::parse($start_date); // 开始时间
         $end_date = Carbon::parse($end_date); // 结束时间
 
-        $status = self::$activityApplyStatus[self::END]; // 已结束
+        $status = self::END; // 已结束
 
         if ($now->copy()->gte($start_date->copy()) && $now->copy()->lt($end_date->copy())) {
-            $status = self::$activityApplyStatus[self::IN_PROGRESS]; // 进行中
+            $status = self::IN_PROGRESS; // 进行中
         }
 
         return $status;
