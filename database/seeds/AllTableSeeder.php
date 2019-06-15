@@ -17,7 +17,7 @@ class AllTableSeeder extends Seeder
         $user = [
             'username' => 'admin',
             'realname' => 'admin',
-            'email' => 'admin@douanquan.com',
+            'email' => 'admin@qq.com',
             'password' => app('hash')->make('admin'),
             'isEnable' => 1,
             'createdAt' => $createdAt,

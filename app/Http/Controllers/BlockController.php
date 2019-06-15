@@ -6,7 +6,7 @@ use App\Models\Block;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class BlockController extends Controller
 {
@@ -15,48 +15,46 @@ class BlockController extends Controller
      */
     public function readAll()
     {
-        $items = Block::select('id', 'name', 'description', 'flag', 'createdAt', 'updatedAt')->orderBy('createdAt', 'desc')->get();
+        $items = Block::query()->select('id', 'name', 'front_cover', 'watch_times', 'status', 'createdAt', 'updatedAt')->orderBy('createdAt', 'desc')->get();
 
         return $this->success($items->toArray());
     }
 
     /**
-     * Get the detail data of the block.
-     *
-     * @param Request $request
-     * @param int     $id      :     block id
-     *
+     * @param $id
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
-    public function read(Request $request, $id)
+    public function read($id)
     {
         $validator = Validator::make(['id' => $id], [
             'id' => 'required|int',
         ]);
-        $item = Block::select('id', 'name', 'description', 'flag', 'createdAt', 'updatedAt')->whereId($id)->first();
+
+        $item = Block::query()->select('id', 'name', 'front_cover', 'watch_times', 'status', 'createdAt', 'updatedAt')->whereId($id)->first();
+
         if ($item) {
             return $this->success($item->toArray());
         } else {
-            $this->throwExeptionByCode(BLOCK_NOT_EXIST);
+            $this->throwExeptionByCode('视频模块不存在');
         }
     }
 
     /**
-     * Delete blocks.
-     *
      * @param Request $request
-     *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function delete(Request $request)
     {
         $params = $this->validate($request, [
-            'ids' => 'required|array|min:1',
+            'ids'   => 'required|array|min:1',
             'ids.*' => 'required|distinct|int',
         ]);
         $num = count($params['ids']);
         DB::beginTransaction();
         $numDestroied = Block::destroy($params['ids']);
+
         if ($num == $numDestroied) {
             DB::commit();
 
@@ -69,18 +67,14 @@ class BlockController extends Controller
 
     /**
      * @param Request $request
-     * @param null    $id
-     *
+     * @param null $id
      * @return \Illuminate\Http\JsonResponse
-     *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function createOrUpdate(Request $request, $id = null)
     {
         $params = $this->validate($request, [
             'name' => 'required|string|max:255',
-            'description' => 'string',
-            'flag' => 'required|string|max:255|uniqueSoftDelete:blocks,flag'.($id ? ",{$id},id" : ''),
         ]);
         if (!empty($id)) {
             $validator = Validator::make(['id' => $id], [
@@ -90,9 +84,9 @@ class BlockController extends Controller
         }
 
         if (isset($params['id']) && $params['id']) {
-            $block = Block::find($params['id']);
+            $block = Block::query()->find($params['id']);
             if (!$block) {
-                $this->throwExeptionByCode(BLOCK_NOT_EXIST);
+                $this->throwExeptionByCode('视频模块不存在');
             }
         } else {
             $block = new Block();
@@ -102,7 +96,7 @@ class BlockController extends Controller
         if ($result) {
             return $this->success(['id' => $block->id]);
         } else {
-            $this->throwExeptionByCode(BLOCK_CREATE_OR_UPDATE_ERROR);
+            $this->throwExeptionByCode('创建或更新失败');
         }
     }
 
@@ -117,18 +111,17 @@ class BlockController extends Controller
     {
         $params = $this->validate($request, [
             'flag' => 'required|string|max:255',
-            'max' => 'int',
+            'max'  => 'int',
         ]);
         try {
             $block = Block::query()
                 ->where('flag', '=', $params['flag'])
                 ->firstOrFail();
         } catch (ModelNotFoundException  $e) {
-            return $this->fail(BLOCK_NOT_EXIST);
+            return $this->fail('视频模块不存在');
         }
 
         $items = $block
-            ->sortedItems()
             ->select('id', 'blockId', 'title', 'description', 'url', 'imagePath', 'sort')
             ->take(isset($params['max']) ? $params['max'] : 99)
             ->get();
