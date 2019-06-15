@@ -27,13 +27,23 @@ class TryUseResource extends Resource
             'price'         => $this->price,
             'product_intro' => $this->when(!empty($request->route('id')), $this->product_intro),
             'apply_end'     => Carbon::parse($this->apply_end)->toDateString(),
-            'status'        => self::applyStatus($this->apply_start, $this->apply_end),
+            'status'        => self::tryUseStatus($this->apply_start, $this->apply_end),
+            'apply_status'          => $this->when(
+                in_array('my', explode('/', $request->getRequestUri())),
+                self::applyStatus($this->apply_status, $this->apply_start, $this->apply_end)
+            ),
             'signs'         => UserAvatarResource::collection($this->whenLoaded('signs')),
             'reports'       => ExperienceReportResource::collection($this->whenLoaded('reports')),
         ];
     }
 
-    private function applyStatus($start_date, $end_date)
+    /**
+     * 活动进行状态
+     * @param $start_date
+     * @param $end_date
+     * @return int
+     */
+    private function tryUseStatus($start_date, $end_date)
     {
         $now = Carbon::now(); // 当前日期
         $start_date = Carbon::parse($start_date); // 开始时间
@@ -46,5 +56,31 @@ class TryUseResource extends Resource
         }
 
         return $status;
+    }
+
+    /**
+     * 个人申请状态
+     * @param $status
+     * @param $start_date
+     * @param $end_date
+     * @return string
+     */
+    private function applyStatus($status, $start_date, $end_date)
+    {
+        $now = Carbon::now(); // 当前日期
+        $start_date = Carbon::parse($start_date); // 开始时间
+        $end_date = Carbon::parse($end_date); // 结束时间
+
+        $apply_status = '申请成功';
+
+        if ($status < 1) {
+            if ($now->copy()->gte($start_date->copy()) && $now->copy()->lt($end_date->copy())) {
+                $apply_status = '申请中';
+            } else {
+                $apply_status = '申请失败';
+            }
+        }
+
+        return $apply_status;
     }
 }

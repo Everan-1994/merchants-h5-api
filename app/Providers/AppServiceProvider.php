@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Share;
+use App\Models\Zan;
+use App\Observers\ShareObserver;
+use App\Observers\ZanObserver;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
@@ -28,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->extendValidator();
         Carbon::setLocale('zh');
+        Share::observe(ShareObserver::class); // 分享观察器
+        Zan::observe(ZanObserver::class); // 点赞观察器
     }
 
     /**

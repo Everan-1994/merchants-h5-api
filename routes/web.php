@@ -3,6 +3,7 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 $router->group([
     'prefix' => 'admin', // 前缀
+    'middleware' => ['cors'],
 ], function ($router) {
     /* @var \Laravel\Lumen\Routing\Router $router */
 
@@ -142,9 +143,15 @@ $router->group([
 
         $router->patch('my/info', 'MemberController@updateUserInfo'); // 更新个人信息
         $router->get('my/report', 'MemberController@myReport'); // 我的报告
+        $router->get('my/activity', 'MemberController@myActivity'); // 我的活动列表
+        $router->get('my/activity/{id}', 'ActivityController@getActivityDetail'); // 我的活动
+        $router->get('my/try_use', 'MemberController@myTryUse'); // 我的试用列表
+        $router->get('my/try_use/{id}', 'TryUseController@getTryUseDetail'); // 我的试用详情
 
         $router->post('suggest', 'MemberController@submitSuggest'); // 关于我们
         $router->post('upload', 'ExperienceReportController@uploads'); // 图片上传
+        $router->post('share', 'ShareZanController@share'); // 分享
+        $router->post('zan', 'ShareZanController@zan'); // 点赞
     });
 
     $router->get('check_in_rule', 'CheckInController@checkInRule'); // 签到规则
@@ -153,10 +160,18 @@ $router->group([
     $router->get('activity', 'ActivityController@index'); // 活动列表
     $router->get('try_use', 'TryUseController@index'); // 试用产品列表
     $router->get('topic', 'TopicController@index'); // 话题列表
+    $router->get('video', 'VideoController@index'); // 视频模块列表
+    $router->get('video/{id}', 'VideoController@getVideoList'); // 模块视频列表
 
 
 //    $router->get('ts', function () {
-//        echo \Carbon\Carbon::parse('2019-06-01')->subDay()->toDateString();
+//        $where = [
+//            'user_id' => 1,
+//            'id' => 1
+//        ];
+//        $model = \App\Models\ActivitySignUp::query()->where($where)->first();
+//
+//        return response($model);
 //    });
 
 });

@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\ApiResources\ActivityResource;
+use App\Http\Resources\ApiResources\MyActivityReportResource;
+use App\Http\Resources\ApiResources\MyTryUseReportResource;
+use App\Http\Resources\ApiResources\TryUseResource;
 use App\Models\ActivitySignUp;
 use App\Models\Others;
 use App\Models\Suggest;
@@ -78,6 +82,11 @@ class MemberController extends Controller
         }
     }
 
+    /**
+     * 更新个人信息
+     * @param Request $request
+     * @return \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory
+     */
     public function updateUserInfo(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -99,8 +108,8 @@ class MemberController extends Controller
         try {
             // 更新个人信息
             User::query()->where('id', Auth::guard('user')->user()->id)->update([
-                'avatar'    => $request->input('avatar'),
-                'name' => $request->input('user_name'),
+                'avatar' => $request->input('avatar'),
+                'name'   => $request->input('user_name'),
             ]);
 
             return response([
@@ -116,22 +125,27 @@ class MemberController extends Controller
         }
     }
 
+    /**
+     * 我的报告
+     * @param Request $request
+     * @return \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory
+     */
     public function myReport(Request $request)
     {
         $page = $request->input('page', 1);
         $page_size = $request->input('page_size', 10);
 
-        $activity = self::joinList(1, $page, $page_size);
-        $try_use = self::joinList(1, $page, $page_size);
+        $activity = self::joinList(1, $page, $page_size); // 活动
+        $try_use = self::joinList(2, $page, $page_size); // 试用
 
         return response([
-            'activity' => [
-                'data'  => $activity,
-                'total' => $activity->total(),
-            ],
             'try_use'  => [
-                'data'  => $activity,
+                'data'  => MyTryUseReportResource::collection($try_use),
                 'total' => $try_use->total(),
+            ],
+            'activity' => [
+                'data'  => MyActivityReportResource::collection($activity),
+                'total' => $activity->total(),
             ],
         ]);
     }
@@ -139,13 +153,64 @@ class MemberController extends Controller
     protected function joinList($type, $page, $page_size)
     {
         if ($type == 1) {
-            $builder = ActivitySignUp::query(); // 参与的活动
+            $builder = ActivitySignUp::query()->with(['activity', 'report']); // 参与的活动
         } else {
-            $builder = UseSignUp::query(); // 参与的试用
+            $builder = UseSignUp::query()->with(['try_use']); // 参与的试用
         }
 
         return $builder->where('user_id', Auth::guard('user')->user()->id)
             ->orderBy('created_at', 'desc')
             ->paginate($page_size, ['*'], 'page', $page);
+    }
+
+    /**
+     * 申请参与的活动
+     * @param Request $request
+     * @return \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory
+     */
+    public function myActivity(Request $request)
+    {
+        $page = $request->input('page', 1);
+        $page_size = $request->input('page_size', 10);
+
+        $activity = ActivitySignUp::query()
+            ->where('user_id', Auth::guard('user')->user()->id)
+            ->with('activity')
+            ->orderBy('created_at', 'desc')
+            ->paginate($page_size, ['*'], 'page', $page); // 所有活动申请
+
+        // 获取申请的活动
+        $activity_arr = optional($activity)->map(function ($item, $key) {
+            $item['activity']['apply_status'] = $item['status']; // 申请状态
+            return $item['activity']; // 具体活动
+        });
+
+        return response([
+            'data' =>  ActivityResource::collection($activity_arr),
+            'total' => $activity->total()
+        ]);
+    }
+
+    public function myTryUse(Request $request)
+    {
+        $page = $request->input('page', 1);
+        $page_size = $request->input('page_size', 10);
+
+        $try_use = UseSignUp::query()
+            ->where('user_id', Auth::guard('user')->user()->id)
+            ->with('try_use')
+            ->orderBy('created_at', 'desc')
+            ->paginate($page_size, ['*'], 'page', $page); // 所有活动申请
+
+        // 获取申请的试用
+        $try_use_arr = optional($try_use)->map(function ($item, $key) {
+            $item['try_use']['apply_status'] = $item['status']; // 申请状态
+            return $item['try_use']; // 具体活动
+        });
+
+        return response([
+            'data' =>  TryUseResource::collection($try_use_arr),
+            'total' => $try_use->total()
+        ]);
     }
 }

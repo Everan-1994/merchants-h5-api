@@ -89,6 +89,8 @@ class CreateDbInitTable extends Migration
             $table->string('name')->comment('名称');
             $table->string('front_cover')->comment('封面');
             $table->integer('watch_times')->default(0)->comment('观看次数');
+            $table->integer('sort')->default(0)->comment('排序');
+            $table->tinyInteger('status')->default(1)->comment('状态：0冻结、1正常');
             $table->timestamp('createdAt')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updatedAt')->default(\DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
             $table->timestamp('deletedAt')->nullable();
@@ -99,10 +101,11 @@ class CreateDbInitTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('blockId')->comment('区块id');
             $table->string('title')->comment('名称');
-            $table->string('front_cover')->comment('封面');
+            $table->string('front_cover')->nullable()->comment('封面');
             $table->string('video')->comment('视频地址');
             $table->integer('watch_times')->default(0)->comment('观看次数');
             $table->integer('sort')->default(0)->comment('排序');
+            $table->tinyInteger('status')->default(1)->comment('状态：0冻结、1正常');
             $table->timestamp('createdAt')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updatedAt')->default(\DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
             $table->timestamp('deletedAt')->nullable();

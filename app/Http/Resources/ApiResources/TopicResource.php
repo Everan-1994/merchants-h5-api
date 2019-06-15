@@ -19,10 +19,19 @@ class TopicResource extends Resource
             'title'       => $this->title,
             'front_cover' => $this->front_cover,
             $this->mergeWhen(!empty($request->route('id')), [
-                'content' => $this->content,
-                'comments' => CommentResource::collection($this->whenLoaded('comments'))
+                'content'  => $this->content,
+                'comments' => CommentResource::collection($this->whenLoaded('comments')),
             ]),
-            'users'       => UserAvatarResource::collection($this->whenLoaded('comments')),
+            'users'       => self::uniqueUser(UserAvatarResource::collection($this->whenLoaded('comments'))),
         ];
+    }
+
+    private function uniqueUser($users)
+    {
+        if (!empty($users)) {
+            $unique = collect($users)->unique('id');
+
+            return $unique->values()->all();
+        }
     }
 }

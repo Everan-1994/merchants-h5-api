@@ -9,7 +9,8 @@ class UserAvatarResource extends Resource
     public function toArray($request)
     {
         return [
-            'avatar' => $this->user->avatar
+            'id' => $this->user->id,
+            'avatar' => $this->user->avatar,
         ];
     }
 }

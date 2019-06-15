@@ -30,10 +30,14 @@ class ActivityResource extends Resource
                 'address'        => $this->address,
                 'limit'          => $this->limit,
                 'activity_intro' => $this->activity_intro,
-                'content'        => $this->content
+                'content'        => $this->content,
             ]),
             'signs'                 => $this->whenLoaded('signs'),
             'reports'               => ExperienceReportResource::collection($this->whenLoaded('reports')),
+            'apply_status'          => $this->when(
+                in_array('my', explode('/', $request->getRequestUri())),
+                self::applyStatus($this->apply_status, $this->apply_start, $this->apply_end)
+            ),
         ];
     }
 
@@ -67,6 +71,12 @@ class ActivityResource extends Resource
         return sprintf('%u天%u时%u分后结束', $d, $h, $i);
     }
 
+    /**
+     * 活动报名状态
+     * @param $start_date
+     * @param $end_date
+     * @return int
+     */
     private function activityApplyStatus($start_date, $end_date)
     {
         $now = Carbon::now(); // 当前日期
@@ -80,5 +90,24 @@ class ActivityResource extends Resource
         }
 
         return $status;
+    }
+
+    private function applyStatus($status, $start_date, $end_date)
+    {
+        $now = Carbon::now(); // 当前日期
+        $start_date = Carbon::parse($start_date); // 开始时间
+        $end_date = Carbon::parse($end_date); // 结束时间
+
+        $apply_status = '申请成功';
+
+        if ($status < 1) {
+            if ($now->copy()->gte($start_date->copy()) && $now->copy()->lt($end_date->copy())) {
+                $apply_status = '申请中';
+            } else {
+                $apply_status = '申请失败';
+            }
+        }
+
+        return $apply_status;
     }
 }
