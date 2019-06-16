@@ -35,10 +35,10 @@ class ImageUpload
         $folderName = "$folder/".date('Ym/d', time());
 
         // 将图片上传目标存储路径中
-        $fileUrl = Storage::put($folderName, $file);
+        $fileUrl = Storage::disk('qiniu')->put($folderName, $file);
 
         // $result = explode('/', $fileUrl);
 
-        return env('FILE_URL').'/'.$fileUrl;
+        return 'http://' . env('QINIU_DOMAIN').'/'.$fileUrl;
     }
 }

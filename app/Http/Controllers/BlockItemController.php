@@ -8,14 +8,17 @@ use App\Traits\UpdateSort;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class BlockItemController extends Controller
 {
     use UpdateSort;
 
     /**
-     * Get all block items data.
+     * @param Request $request
+     * @param $blockId
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function readAll(Request $request, $blockId)
     {
@@ -24,39 +27,51 @@ class BlockItemController extends Controller
         ]);
 
         try {
-            Block::findOrFail($blockId);
+            Block::query()->findOrFail($blockId);
         } catch (ModelNotFoundException $e) {
-            $this->throwExeptionByCode(BLOCK_NOT_EXIST);
+            $this->throwExeptionByCode('视频模块不存在');
         }
 
-        $items = BlockItem::select('id', 'blockId', 'title', 'description', 'url', 'imagePath', 'sort', 'createdAt', 'updatedAt')
+        $items = BlockItem::query()->select('id', 'blockId', 'title', 'watch_times', 'front_cover', 'video', 'status', 'sort', 'createdAt')
             ->where('blockId', '=', $blockId)
+            ->when($request->exists('title'), function ($query) use ($request) {
+                $query->where('title', 'like', '%' . $request->input('title') . '%');
+            })
+            ->when($request->input('startTime') && $request->input('endTime'), function ($query) use ($request) {
+                return $query->whereBetween('createdAt', [
+                    date('Y-m-d H:i:s', $request->input('startTime')),
+                    date('Y-m-d ' . '23:59:59', $request->input('endTime')),
+                ]);
+            })
             ->orderBy('sort', 'desc')
-            ->get();
+            ->paginate($request->input('pageSize') ?: 10, ['*'], 'page', $request->input('page') ?: 1);
 
-        return $this->success($items->toArray());
+        return $this->success([
+            'data' => optional($items)->toArray()['data'] ?: [],
+            'meta' => [
+                'total' => $items->total(),
+            ],
+        ]);
     }
 
     /**
-     * Get the detail data of the block item.
-     *
      * @param Request $request
-     * @param int     $id      :     block item id
-     *
+     * @param null $id
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function read(Request $request, $id = null)
     {
         $validator = Validator::make(['id' => $id], [
             'id' => 'required|int',
         ]);
-        $item = BlockItem::select('id', 'blockId', 'title', 'description', 'url', 'imagePath', 'sort', 'createdAt', 'updatedAt')
+        $item = BlockItem::query()->select('id', 'blockId', 'title', 'watch_times', 'front_cover', 'video', 'status', 'sort', 'createdAt')
             ->whereId($id)
             ->first();
         if ($item) {
             return $this->success($item->toArray());
         } else {
-            $this->throwExeptionByCode(BLOCK_ITEM_NOT_EXIST);
+            $this->throwExeptionByCode('视频列表不存在');
         }
     }
 
@@ -73,9 +88,7 @@ class BlockItemController extends Controller
         $params = $this->validate($request, [
             'blockId' => 'required|int',
             'title' => 'string|max:255',
-            'description' => 'string',
-            'url' => 'string|max:255',
-            'imagePath' => 'string|max:255',
+            'video' => 'string',
             'sort' => 'int',
         ]);
         if (!empty($id)) {
@@ -85,27 +98,27 @@ class BlockItemController extends Controller
             $params['id'] = $id;
         }
         try {
-            Block::findOrFail($params['blockId']);
+            Block::query()->findOrFail($params['blockId']);
         } catch (ModelNotFoundException $e) {
-            $this->throwExeptionByCode(BLOCK_NOT_EXIST);
+            $this->throwExeptionByCode('视频模块不存在');
         }
 
         try {
             if (isset($params['id']) && $params['id']) {
-                $blockItem = BlockItem::findOrFail($params['id']);
+                $blockItem = BlockItem::query()->findOrFail($params['id']);
             } else {
                 $blockItem = new BlockItem();
                 $blockItem->sort = time();
             }
         } catch (ModelNotFoundException $e) {
-            $this->throwExeptionByCode(BLOCK_ITEM_NOT_EXIST);
+            $this->throwExeptionByCode('视频列表不存在');
         }
         $blockItem->fill($params);
         $result = $blockItem->save();
         if ($result) {
             return $this->success(['id' => $blockItem->id]);
         } else {
-            $this->throwExeptionByCode(BLOCK_ITEM_CREATE_OR_UPDATE_ERROR);
+            $this->throwExeptionByCode('添加或更新失败');
         }
     }
 
@@ -132,7 +145,7 @@ class BlockItemController extends Controller
             return $this->success();
         } else {
             DB::rollBack();
-            $this->throwExeptionByCode(BLOCK_ITEM_DELETE_ERROR);
+            $this->throwExeptionByCode('视频删除失败');
         }
     }
 
@@ -161,6 +174,6 @@ class BlockItemController extends Controller
             return $this->success();
         }
 
-        return $this->fail(BLOCK_ITEM_SORT_ERROR);
+        return $this->fail('排序失败');
     }
 }

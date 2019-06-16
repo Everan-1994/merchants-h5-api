@@ -74,7 +74,26 @@ $router->group([
             $router->patch('/', 'MemberController@changeStatus');           // 变更状态
         });
 
-        // 区块
+        // 话题
+        $router->group(['prefix' => 'topic'], function ($router) {
+            /* @var \Laravel\Lumen\Routing\Router $router */
+
+            $router->post('/', 'TopicController@store');              // 新增
+            $router->get('/', 'TopicController@index');               // 列表
+            $router->get('/{id}', 'TopicController@show');            // 详情
+            $router->patch('/sort', 'TopicController@updateSort');    // 更新排序
+            $router->put('/{id}', 'TopicController@update');              // 更新
+            $router->delete('/', 'TopicController@delete');           // 删除
+
+            // 评论列表
+            $router->get('/{topicId:[0-9]+}/item', 'CommentController@index'); // list
+            $router->group(['prefix' => 'item'], function ($router) {
+                $router->delete('/', 'CommentController@delete'); // delete
+            });
+        });
+
+
+        // 视频模块
         $router->group(['prefix' => 'block'], function ($router) {
             /* @var \Laravel\Lumen\Routing\Router $router */
             $router->get('/', 'BlockController@readAll'); // list
@@ -83,7 +102,7 @@ $router->group([
             $router->put('/{id:[0-9]+}', 'BlockController@createOrUpdate'); // update
             $router->delete('/', 'BlockController@delete'); // delete
 
-            // 区块内容
+            // 视频列表
             $router->get('/{blockId:[0-9]+}/item', 'BlockItemController@readAll'); // list
             $router->group(['prefix' => 'item'], function ($router) {
                 $router->get('{id:[0-9]+}', 'BlockItemController@read'); // detail

@@ -17,6 +17,7 @@ class CommentResource extends Resource
     public function toArray($request)
     {
         return [
+            'id'    => $this->id,
             'comment'    => $this->comment,
             'like_times' => $this->like_times,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i'),

@@ -75,6 +75,7 @@ class BlockController extends Controller
     {
         $params = $this->validate($request, [
             'name' => 'required|string|max:255',
+            'front_cover' => 'required|string',
         ]);
         if (!empty($id)) {
             $validator = Validator::make(['id' => $id], [
