@@ -74,6 +74,24 @@ $router->group([
             $router->patch('/', 'MemberController@changeStatus');           // 变更状态
         });
 
+        // 试用
+        $router->group(['prefix' => 'try_use'], function ($router) {
+            /* @var \Laravel\Lumen\Routing\Router $router */
+
+            $router->post('/', 'TryUseController@store');              // 新增
+            $router->get('/', 'TryUseController@index');               // 列表
+            $router->get('/{id}', 'TryUseController@show');            // 详情
+            $router->patch('/sort', 'TryUseController@updateSort');    // 更新排序
+            $router->put('/{id}', 'TryUseController@update');          // 更新
+            $router->delete('/', 'TryUseController@delete');           // 删除
+
+            // 评论列表
+//            $router->get('/{topicId:[0-9]+}/item', 'CommentController@index'); // list
+//            $router->group(['prefix' => 'item'], function ($router) {
+//                $router->delete('/', 'CommentController@delete'); // delete
+//            });
+        });
+
         // 话题
         $router->group(['prefix' => 'topic'], function ($router) {
             /* @var \Laravel\Lumen\Routing\Router $router */
@@ -82,7 +100,7 @@ $router->group([
             $router->get('/', 'TopicController@index');               // 列表
             $router->get('/{id}', 'TopicController@show');            // 详情
             $router->patch('/sort', 'TopicController@updateSort');    // 更新排序
-            $router->put('/{id}', 'TopicController@update');              // 更新
+            $router->put('/{id}', 'TopicController@update');          // 更新
             $router->delete('/', 'TopicController@delete');           // 删除
 
             // 评论列表
@@ -183,14 +201,8 @@ $router->group([
     $router->get('video/{id}', 'VideoController@getVideoList'); // 模块视频列表
 
 
-//    $router->get('ts', function () {
-//        $where = [
-//            'user_id' => 1,
-//            'id' => 1
-//        ];
-//        $model = \App\Models\ActivitySignUp::query()->where($where)->first();
-//
-//        return response($model);
-//    });
+    $router->get('ts', function () {
+        return 'test';
+    });
 
 });

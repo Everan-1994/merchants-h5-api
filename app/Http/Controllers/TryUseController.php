@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Topic;
+use App\Models\TryUse;
 use App\Traits\UpdateSort;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class TopicController extends Controller
+class TryUseController extends Controller
 {
     use UpdateSort;
 
@@ -20,23 +20,23 @@ class TopicController extends Controller
      */
     public function index(Request $request)
     {
-        $topic = Topic::query()
-            ->select(['id', 'title', 'created_at', 'sort'])
+        $try_use = TryUse::query()
+            ->select(['id', 'name', 'price', 'apply_start', 'apply_end', 'sort'])
             ->when($request->input('startTime') && $request->input('endTime'), function ($query) use ($request) {
                 $query->whereBetween('created_at', [
                     date('Y-m-d H:i:s', $request->input('startTime')),
                     date('Y-m-d ' . '23:59:59', $request->input('endTime')),
                 ]);
             })
-            ->when($request->filled('title'), function ($query) use ($request) {
-                $query->where('title', 'like', '%' . $request->input('title') . '%');
+            ->when($request->filled('name'), function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->input('name') . '%');
             })
             ->orderBy($request->input('order') ?: 'created_at', $request->input('sort') ?: 'desc')
             ->paginate($request->input('pageSize', 10), ['*'], 'page', $request->input('page', 1));
 
         return $this->success([
-            'data'  => optional($topic)->toArray()['data'] ?: [],
-            'total' => $topic->total(),
+            'data'  => optional($try_use)->toArray()['data'] ?: [],
+            'total' => $try_use->total(),
         ]);
     }
 
@@ -53,7 +53,7 @@ class TopicController extends Controller
             'id' => 'required|numeric',
         ]);
 
-        $topic = Topic::query()->find($id);
+        $topic = TryUse::query()->find($id);
 
         if ($topic) {
             return $this->success($topic);
@@ -85,7 +85,7 @@ class TopicController extends Controller
         $params['userId'] = Auth::id();
         $params['sort'] = Carbon::now()->timestamp;
 
-        $result = Topic::query()->create($params);
+        $result = TryUse::query()->create($params);
 
         if ($result) {
             return $this->success($result, '添加成功');
