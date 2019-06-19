@@ -41,7 +41,7 @@ class TryUseController extends Controller
     }
 
     /**
-     * 话题详情.
+     * 试用详情.
      *
      * @param $id
      *
@@ -53,10 +53,19 @@ class TryUseController extends Controller
             'id' => 'required|numeric',
         ]);
 
-        $topic = TryUse::query()->find($id);
+        $try_use = TryUse::query()->find($id);
 
-        if ($topic) {
-            return $this->success($topic);
+        if ($try_use) {
+            return $this->success([
+                'name' => $try_use->name,
+                'front_cover' => $try_use->front_cover,
+                'stock' => $try_use->stock,
+                'price' => $try_use->price,
+                'apply_start' => $try_use->apply_start,
+                'apply_end' => $try_use->apply_end,
+                'product_intro' => implode(',', json_decode($try_use->product_intro, true)),
+                'default_list' => json_decode($try_use->product_intro, true)
+            ]);
         }
 
         return $this->fail('获取详情失败');
@@ -74,16 +83,22 @@ class TryUseController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'title'       => 'required|string',
-            'front_cover' => 'nullable|string',
-            'content'     => 'required|string',
+            'name'          => 'required|string',
+            'front_cover'   => 'required|string',
+            'stock'         => 'required|int',
+            'price'         => 'required',
+            'apply_start'   => 'required',
+            'apply_end'     => 'required',
+            'product_intro' => 'required',
         ];
 
         // 验证参数，如果验证失败，则会抛出 ValidationException 的异常
         $params = $this->validate($request, $rules);
 
-        $params['userId'] = Auth::id();
         $params['sort'] = Carbon::now()->timestamp;
+        $params['product_intro'] = json_encode(explode(',', $params['product_intro']));
+        $params['apply_start'] = date('Y-m-d H:i:s', $params['apply_start']);
+        $params['apply_end'] = date('Y-m-d H:i:s', $params['apply_end']);
 
         $result = TryUse::query()->create($params);
 
@@ -104,9 +119,13 @@ class TryUseController extends Controller
     public function update($id, Request $request)
     {
         $rules = [
-            'title'       => 'required|string',
-            'front_cover' => 'nullable|string',
-            'content'     => 'required|string',
+            'name'          => 'required|string',
+            'front_cover'   => 'required|string',
+            'stock'         => 'required|int',
+            'price'         => 'required',
+            'apply_start'   => 'required',
+            'apply_end'     => 'required',
+            'product_intro' => 'required',
         ];
 
         // 验证参数，如果验证失败，则会抛出 ValidationException 的异常
@@ -116,10 +135,14 @@ class TryUseController extends Controller
             'id' => 'required|int',
         ]);
 
-        $topic = Topic::query()->whereId($id)->update($params);
+        $params['product_intro'] = json_encode(explode(',', $params['product_intro']));
+        $params['apply_start'] = date('Y-m-d H:i:s', $params['apply_start']);
+        $params['apply_end'] = date('Y-m-d H:i:s', $params['apply_end']);
+        
+        $try_use = TryUse::query()->whereId($id)->update($params);
 
-        if ($topic) {
-            return $this->success($topic, '编辑成功');
+        if ($try_use) {
+            return $this->success($try_use, '编辑成功');
         }
 
         return $this->fail('编辑失败');
@@ -142,7 +165,7 @@ class TryUseController extends Controller
         ]);
 
         $num = count($params['ids']);
-        $numDestroied = Topic::query()
+        $numDestroied = TryUse::query()
             ->whereIn('id', collect($params['ids']))
             ->delete();
 
@@ -164,13 +187,13 @@ class TryUseController extends Controller
     {
         $rules = [
             'sortType' => 'required|string',
-            'item' => 'required|array|min:1',
+            'item'     => 'required|array|min:1',
         ];
 
         $params = $this->validate($request, $rules);
 
         if ($this->commonSort(
-            Topic::class,
+            TryUse::class,
             $params['sortType'],
             $params['item']['id'],
             $params['item']['sort'],
