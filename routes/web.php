@@ -85,11 +85,17 @@ $router->group([
             $router->put('/{id}', 'TryUseController@update');          // 更新
             $router->delete('/', 'TryUseController@delete');           // 删除
 
-            // 评论列表
-//            $router->get('/{topicId:[0-9]+}/item', 'CommentController@index'); // list
-//            $router->group(['prefix' => 'item'], function ($router) {
-//                $router->delete('/', 'CommentController@delete'); // delete
-//            });
+            // 申请列表
+            $router->get('/{tryUseId:[0-9]+}/sign', 'TryUseSignController@index'); // list
+            $router->group(['prefix' => 'sign'], function ($router) {
+                $router->delete('/', 'TryUseSignController@delete'); // delete
+            });
+
+            // 报告列表
+            $router->get('/{tryUseId:[0-9]+}/report', 'TryUseReportController@index'); // list
+            $router->group(['prefix' => 'report'], function ($router) {
+                $router->delete('/', 'TryUseReportController@delete'); // delete
+            });
         });
 
         // 话题

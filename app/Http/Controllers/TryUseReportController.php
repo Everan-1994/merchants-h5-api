@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ApiResources\CommentResource;
-use App\Models\Comment;
+use App\Http\Resources\Admin\TryUseReportResource;
+use App\Models\ExperienceReport;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
-class CommentController extends Controller
+class TryUseReportController extends Controller
 {
     /**
-     * @param $topicId
+     * @param $tryUseId
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index($topicId, Request $request)
+    public function index($tryUseId, Request $request)
     {
-        $comment = Comment::query()
-            ->where('topic_id', $topicId)
+        $try_use_report = ExperienceReport::query()
+            ->where([
+                ['type', 2],
+                ['type_id', $tryUseId]
+            ])
+            ->with('user')
             ->when($request->input('startTime') && $request->input('endTime'), function ($query) use ($request) {
                 $query->whereBetween('created_at', [
                     date('Y-m-d H:i:s', $request->input('startTime')),
@@ -33,10 +36,11 @@ class CommentController extends Controller
             ->paginate($request->input('pageSize', 10), ['*'], 'page', $request->input('page', 1));
 
         return $this->success([
-            'data'  => CommentResource::collection($comment),
-            'total' => $comment->total(),
+            'data'  => TryUseReportResource::collection($try_use_report),
+            'total' => $try_use_report->total(),
         ]);
     }
+
 
     /**
      * 删除.
@@ -55,7 +59,7 @@ class CommentController extends Controller
         ]);
 
         $num = count($params['ids']);
-        $numDestroied = Comment::query()
+        $numDestroied = ExperienceReport::query()
             ->whereIn('id', collect($params['ids']))
             ->delete();
 
@@ -65,4 +69,5 @@ class CommentController extends Controller
 
         return $this->fail('删除失败');
     }
+
 }

@@ -2,41 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ApiResources\CommentResource;
-use App\Models\Comment;
+use App\Http\Resources\Admin\TryUseSignResource;
+use App\Models\UseSignUp;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
-class CommentController extends Controller
+class TryUseSignController extends Controller
 {
     /**
-     * @param $topicId
+     * @param $tryUseId
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index($topicId, Request $request)
+    public function index($tryUseId, Request $request)
     {
-        $comment = Comment::query()
-            ->where('topic_id', $topicId)
+        $try_use_sign = UseSignUp::query()
+            ->where('use_id', $tryUseId)
             ->when($request->input('startTime') && $request->input('endTime'), function ($query) use ($request) {
                 $query->whereBetween('created_at', [
                     date('Y-m-d H:i:s', $request->input('startTime')),
                     date('Y-m-d ' . '23:59:59', $request->input('endTime')),
                 ]);
             })
+            ->when($request->filled('status'), function ($query) use ($request) {
+                $query->where('status', '=', $request->input('status'));
+            })
             ->when($request->filled('name'), function ($query) use ($request) {
-                $query->WhereHas('user', function ($query) use ($request) {
-                    $query->where('name', 'like', '%'.$request->input('name').'%');
-                });
+                $query->where('contact_name', 'like', '%' . $request->input('name') . '%');
             })
             ->orderBy($request->input('order') ?: 'created_at', $request->input('sort') ?: 'desc')
             ->paginate($request->input('pageSize', 10), ['*'], 'page', $request->input('page', 1));
 
         return $this->success([
-            'data'  => CommentResource::collection($comment),
-            'total' => $comment->total(),
+            'data'  => TryUseSignResource::collection($try_use_sign),
+            'total' => $try_use_sign->total(),
         ]);
     }
+
 
     /**
      * 删除.
@@ -55,7 +56,7 @@ class CommentController extends Controller
         ]);
 
         $num = count($params['ids']);
-        $numDestroied = Comment::query()
+        $numDestroied = UseSignUp::query()
             ->whereIn('id', collect($params['ids']))
             ->delete();
 
@@ -65,4 +66,5 @@ class CommentController extends Controller
 
         return $this->fail('删除失败');
     }
+
 }

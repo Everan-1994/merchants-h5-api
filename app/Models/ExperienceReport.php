@@ -47,4 +47,9 @@ class ExperienceReport extends ApiBaseModel
 
         return Carbon::parse($date)->diffForHumans();
     }
+
+    public function getImagesAttribute($images)
+    {
+        return json_decode($images, true);
+    }
 }

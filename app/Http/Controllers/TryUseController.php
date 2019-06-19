@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Admin\TryUseResource;
 use App\Models\TryUse;
 use App\Traits\UpdateSort;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class TryUseController extends Controller
@@ -21,12 +21,23 @@ class TryUseController extends Controller
     public function index(Request $request)
     {
         $try_use = TryUse::query()
-            ->select(['id', 'name', 'price', 'apply_start', 'apply_end', 'sort'])
             ->when($request->input('startTime') && $request->input('endTime'), function ($query) use ($request) {
-                $query->whereBetween('created_at', [
-                    date('Y-m-d H:i:s', $request->input('startTime')),
-                    date('Y-m-d ' . '23:59:59', $request->input('endTime')),
-                ]);
+                $query->where('apply_start', '<=', date('Y-m-d H:i:s', $request->input('startTime')))
+                    ->where('apply_end', '>=', date('Y-m-d H:i:s', $request->input('startTime')));
+            })
+            ->when($request->filled('status'), function ($query) use ($request) {
+                switch ($request->input('status')){
+                    case 0: // 未开始
+                        $query->where('apply_start', '>', Carbon::now()->toDateTimeString());
+                        break;
+                    case 1: // 进行中
+                        $query->where('apply_start', '<=', Carbon::now()->toDateTimeString())
+                            ->where('apply_end', '>=', Carbon::now()->toDateTimeString());
+                        break;
+                    case 2: // 已结束
+                        $query->where('apply_end', '<=', Carbon::now()->toDateTimeString());
+                        break;
+                }
             })
             ->when($request->filled('name'), function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->input('name') . '%');
@@ -35,7 +46,7 @@ class TryUseController extends Controller
             ->paginate($request->input('pageSize', 10), ['*'], 'page', $request->input('page', 1));
 
         return $this->success([
-            'data'  => optional($try_use)->toArray()['data'] ?: [],
+            'data'  => TryUseResource::collection($try_use),
             'total' => $try_use->total(),
         ]);
     }
@@ -57,14 +68,14 @@ class TryUseController extends Controller
 
         if ($try_use) {
             return $this->success([
-                'name' => $try_use->name,
-                'front_cover' => $try_use->front_cover,
-                'stock' => $try_use->stock,
-                'price' => $try_use->price,
-                'apply_start' => $try_use->apply_start,
-                'apply_end' => $try_use->apply_end,
+                'name'          => $try_use->name,
+                'front_cover'   => $try_use->front_cover,
+                'stock'         => $try_use->stock,
+                'price'         => $try_use->price,
+                'apply_start'   => $try_use->apply_start,
+                'apply_end'     => $try_use->apply_end,
                 'product_intro' => implode(',', json_decode($try_use->product_intro, true)),
-                'default_list' => json_decode($try_use->product_intro, true)
+                'default_list'  => json_decode($try_use->product_intro, true),
             ]);
         }
 
@@ -96,7 +107,7 @@ class TryUseController extends Controller
         $params = $this->validate($request, $rules);
 
         $params['sort'] = Carbon::now()->timestamp;
-        $params['product_intro'] = json_encode(explode(',', $params['product_intro']));
+        $params['product_intro'] = json_encode(array_filter(explode(',', $params['product_intro'])));
         $params['apply_start'] = date('Y-m-d H:i:s', $params['apply_start']);
         $params['apply_end'] = date('Y-m-d H:i:s', $params['apply_end']);
 
@@ -135,10 +146,10 @@ class TryUseController extends Controller
             'id' => 'required|int',
         ]);
 
-        $params['product_intro'] = json_encode(explode(',', $params['product_intro']));
+        $params['product_intro'] = json_encode(array_filter(explode(',', $params['product_intro'])));
         $params['apply_start'] = date('Y-m-d H:i:s', $params['apply_start']);
         $params['apply_end'] = date('Y-m-d H:i:s', $params['apply_end']);
-        
+
         $try_use = TryUse::query()->whereId($id)->update($params);
 
         if ($try_use) {
