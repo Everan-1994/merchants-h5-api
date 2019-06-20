@@ -74,6 +74,24 @@ $router->group([
             $router->patch('/', 'MemberController@changeStatus');           // 变更状态
         });
 
+        // 签到规则
+        $router->group(['prefix' => 'others'], function ($router) {
+            /* @var \Laravel\Lumen\Routing\Router $router */
+            $router->get('/{id}', 'OtherController@show');                 // 详情
+            $router->put('/{id}', 'OtherController@update');               // 更新
+        });
+
+        // 奖品
+        $router->group(['prefix' => 'prizes'], function ($router) {
+            /* @var \Laravel\Lumen\Routing\Router $router */
+
+            $router->get('/', 'PrizeController@index');                    // 列表
+            $router->get('/{id}', 'PrizeController@show');                 // 详情
+            $router->post('/', 'PrizeController@store');                   // 新增
+            $router->put('/{id}', 'PrizeController@update');               // 更新
+            $router->delete('/', 'PrizeController@delete');                // 删除单个
+        });
+
         // 活动
         $router->group(['prefix' => 'activity'], function ($router) {
             /* @var \Laravel\Lumen\Routing\Router $router */
