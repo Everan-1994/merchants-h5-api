@@ -5,7 +5,7 @@ namespace App\Http\Resources\Admin;
 use App\Http\Resources\Resource;
 use Carbon\Carbon;
 
-class TryUseResource extends Resource
+class ActivityResource extends Resource
 {
     const NOT_STARTED = 0;
     const IN_PROGRESS = 1;
@@ -26,12 +26,13 @@ class TryUseResource extends Resource
     public function toArray($request)
     {
         return [
-            'id'          => $this->id,
-            'name'        => $this->name,
-            'apply_start' => $this->apply_start,
-            'apply_end'   => $this->apply_end,
-            'sort'        => $this->sort,
-            'status'      => self::tryUseStatus($this->apply_start, $this->apply_end),
+            'id'             => $this->id,
+            'name'           => $this->name,
+            'limit'          => $this->limit,
+            'activity_start' => $this->activity_start,
+            'activity_end'   => $this->activity_end,
+            'sort'           => $this->sort,
+            'status'         => self::activityStatus($this->activity_start, $this->activity_end),
         ];
     }
 
@@ -41,7 +42,7 @@ class TryUseResource extends Resource
      * @param $end_date
      * @return int
      */
-    private function tryUseStatus($start_date, $end_date)
+    private function activityStatus($start_date, $end_date)
     {
         $now = Carbon::now(); // 当前日期
         $start_date = Carbon::parse($start_date); // 开始时间

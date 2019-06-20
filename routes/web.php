@@ -74,6 +74,30 @@ $router->group([
             $router->patch('/', 'MemberController@changeStatus');           // 变更状态
         });
 
+        // 活动
+        $router->group(['prefix' => 'activity'], function ($router) {
+            /* @var \Laravel\Lumen\Routing\Router $router */
+
+            $router->post('/', 'ActivityController@store');              // 新增
+            $router->get('/', 'ActivityController@index');               // 列表
+            $router->get('/{id}', 'ActivityController@show');            // 详情
+            $router->patch('/sort', 'ActivityController@updateSort');    // 更新排序
+            $router->put('/{id}', 'ActivityController@update');          // 更新
+            $router->delete('/', 'ActivityController@delete');           // 删除
+
+            // 申请列表
+            $router->get('/{activityId:[0-9]+}/sign', 'ActivitySignController@index'); // list
+            $router->group(['prefix' => 'sign'], function ($router) {
+                $router->delete('/', 'ActivitySignController@delete'); // delete
+            });
+
+            // 报告列表
+            $router->get('/{activityId:[0-9]+}/report', 'ActivityReportController@index'); // list
+            $router->group(['prefix' => 'report'], function ($router) {
+                $router->delete('/', 'ActivityReportController@delete'); // delete
+            });
+        });
+
         // 试用
         $router->group(['prefix' => 'try_use'], function ($router) {
             /* @var \Laravel\Lumen\Routing\Router $router */

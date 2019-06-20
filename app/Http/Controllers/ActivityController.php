@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\Admin\TryUseResource;
-use App\Models\TryUse;
+use App\Http\Resources\Admin\ActivityResource;
+use App\Models\Activity;
 use App\Traits\UpdateSort;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class TryUseController extends Controller
+class ActivityController extends Controller
 {
     use UpdateSort;
 
@@ -20,22 +20,22 @@ class TryUseController extends Controller
      */
     public function index(Request $request)
     {
-        $try_use = TryUse::query()
+        $activity = Activity::query()
             ->when($request->input('startTime') && $request->input('endTime'), function ($query) use ($request) {
-                $query->where('apply_start', '<=', date('Y-m-d H:i:s', $request->input('startTime')))
-                    ->where('apply_end', '>=', date('Y-m-d H:i:s', $request->input('startTime')));
+                $query->where('activity_start', '<=', date('Y-m-d H:i:s', $request->input('startTime')))
+                    ->where('activity_end', '>=', date('Y-m-d H:i:s', $request->input('startTime')));
             })
             ->when($request->filled('status'), function ($query) use ($request) {
-                switch ($request->input('status')){
+                switch ($request->input('status')) {
                     case 0: // 未开始
-                        $query->where('apply_start', '>', Carbon::now()->toDateTimeString());
+                        $query->where('activity_start', '>', Carbon::now()->toDateTimeString());
                         break;
                     case 1: // 进行中
-                        $query->where('apply_start', '<=', Carbon::now()->toDateTimeString())
+                        $query->where('activity_start', '<=', Carbon::now()->toDateTimeString())
                             ->where('apply_end', '>=', Carbon::now()->toDateTimeString());
                         break;
                     case 2: // 已结束
-                        $query->where('apply_end', '<=', Carbon::now()->toDateTimeString());
+                        $query->where('activity_end', '<=', Carbon::now()->toDateTimeString());
                         break;
                 }
             })
@@ -46,8 +46,8 @@ class TryUseController extends Controller
             ->paginate($request->input('pageSize', 10), ['*'], 'page', $request->input('page', 1));
 
         return $this->success([
-            'data'  => TryUseResource::collection($try_use),
-            'total' => $try_use->total(),
+            'data'  => ActivityResource::collection($activity),
+            'total' => $activity->total(),
         ]);
     }
 
@@ -64,18 +64,21 @@ class TryUseController extends Controller
             'id' => 'required|numeric',
         ]);
 
-        $try_use = TryUse::query()->find($id);
+        $activity = Activity::query()->find($id);
 
-        if ($try_use) {
+        if ($activity) {
             return $this->success([
-                'name'          => $try_use->name,
-                'front_cover'   => $try_use->front_cover,
-                'stock'         => $try_use->stock,
-                'price'         => $try_use->price,
-                'apply_start'   => $try_use->apply_start,
-                'apply_end'     => $try_use->apply_end,
-                'product_intro' => implode(',', json_decode($try_use->product_intro, true)),
-                'default_list'  => json_decode($try_use->product_intro, true),
+                'name'           => $activity->name,
+                'front_cover'    => $activity->front_cover,
+                'content'        => $activity->content,
+                'address'        => $activity->address,
+                'limit'          => $activity->limit,
+                'apply_start'    => $activity->apply_start,
+                'apply_end'      => $activity->apply_end,
+                'activity_start' => $activity->activity_start,
+                'activity_end'   => $activity->activity_end,
+                'activity_intro' => implode(',', json_decode($activity->activity_intro, true)),
+                'default_list'   => json_decode($activity->activity_intro, true),
             ]);
         }
 
@@ -94,24 +97,29 @@ class TryUseController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'name'          => 'required|string',
-            'front_cover'   => 'required|string',
-            'stock'         => 'required|int',
-            'price'         => 'required',
-            'apply_start'   => 'required',
-            'apply_end'     => 'required',
-            'product_intro' => 'required',
+            'name'           => 'required|string',
+            'front_cover'    => 'required|string',
+            'limit'          => 'required|int',
+            'activity_start' => 'required',
+            'activity_end'   => 'required',
+            'apply_start'    => 'required',
+            'apply_end'      => 'required',
+            'activity_intro' => 'required',
+            'content'        => 'required',
+            'address'        => 'required',
         ];
 
         // 验证参数，如果验证失败，则会抛出 ValidationException 的异常
         $params = $this->validate($request, $rules);
 
         $params['sort'] = Carbon::now()->timestamp;
-        $params['product_intro'] = json_encode(explode(',', $params['product_intro']));
+        $params['activity_intro'] = json_encode(explode(',', $params['activity_intro']));
         $params['apply_start'] = date('Y-m-d H:i:s', $params['apply_start']);
         $params['apply_end'] = date('Y-m-d H:i:s', $params['apply_end']);
+        $params['activity_start'] = date('Y-m-d H:i:s', $params['activity_start']);
+        $params['activity_end'] = date('Y-m-d H:i:s', $params['activity_end']);
 
-        $result = TryUse::query()->create($params);
+        $result = Activity::query()->create($params);
 
         if ($result) {
             return $this->success($result, '添加成功');
@@ -130,13 +138,16 @@ class TryUseController extends Controller
     public function update($id, Request $request)
     {
         $rules = [
-            'name'          => 'required|string',
-            'front_cover'   => 'required|string',
-            'stock'         => 'required|int',
-            'price'         => 'required',
-            'apply_start'   => 'required',
-            'apply_end'     => 'required',
-            'product_intro' => 'required',
+            'name'           => 'required|string',
+            'front_cover'    => 'required|string',
+            'limit'          => 'required|int',
+            'activity_start' => 'required',
+            'activity_end'   => 'required',
+            'apply_start'    => 'required',
+            'apply_end'      => 'required',
+            'activity_intro' => 'required',
+            'content'        => 'required',
+            'address'        => 'required',
         ];
 
         // 验证参数，如果验证失败，则会抛出 ValidationException 的异常
@@ -146,14 +157,16 @@ class TryUseController extends Controller
             'id' => 'required|int',
         ]);
 
-        $params['product_intro'] = json_encode(explode(',', $params['product_intro']));
+        $params['activity_intro'] = json_encode(explode(',', $params['activity_intro']));
         $params['apply_start'] = date('Y-m-d H:i:s', $params['apply_start']);
         $params['apply_end'] = date('Y-m-d H:i:s', $params['apply_end']);
+        $params['activity_start'] = date('Y-m-d H:i:s', $params['activity_start']);
+        $params['activity_end'] = date('Y-m-d H:i:s', $params['activity_end']);
 
-        $try_use = TryUse::query()->whereId($id)->update($params);
+        $activity = Activity::query()->whereId($id)->update($params);
 
-        if ($try_use) {
-            return $this->success($try_use, '编辑成功');
+        if ($activity) {
+            return $this->success($activity, '编辑成功');
         }
 
         return $this->fail('编辑失败');
@@ -176,7 +189,7 @@ class TryUseController extends Controller
         ]);
 
         $num = count($params['ids']);
-        $numDestroied = TryUse::query()
+        $numDestroied = Activity::query()
             ->whereIn('id', collect($params['ids']))
             ->delete();
 
@@ -204,7 +217,7 @@ class TryUseController extends Controller
         $params = $this->validate($request, $rules);
 
         if ($this->commonSort(
-            TryUse::class,
+            Activity::class,
             $params['sortType'],
             $params['item']['id'],
             $params['item']['sort'],
