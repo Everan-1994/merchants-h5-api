@@ -2,9 +2,7 @@
 
 return [
     'supportsCredentials' => false,
-    'allowedOrigins' => [
-        'http://merchants.admin.lzdu.com'
-    ],
+    'allowedOrigins' => ['*'],
     'allowedOriginsPatterns' => [],
     'allowedHeaders' => ['*'],
     'allowedMethods' => ['*'],
