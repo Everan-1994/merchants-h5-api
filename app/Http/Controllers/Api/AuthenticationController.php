@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\UserLoginEvent;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -78,6 +79,7 @@ class AuthenticationController extends Controller
                     'status' => User::ACTIVE,
                 ]
             );
+
         }
 
         if (User::FREEZE === $user['status']) {
@@ -92,6 +94,7 @@ class AuthenticationController extends Controller
         // 给用户授权 token
         $token = Auth::guard('user')->fromUser($user);
 
+        event(new UserLoginEvent($user['id'])); // 添加日志记录事件
 
         return response()->json([
             'errorCode' => 0,

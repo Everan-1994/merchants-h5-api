@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -91,8 +92,25 @@ class User extends BaseModel implements JWTSubject, Authenticatable
     {
     }
 
-//    public function checkIns()
-//    {
-//        return $this->hasMany(CheckIn::class, 'user_id', 'id');
-//    }
+    public function activities()
+    {
+        return $this->hasMany(ActivitySignUp::class, 'user_id', 'id')
+            ->where('status', '=', 1);
+    }
+
+    public function try_uses()
+    {
+        return $this->hasMany(UseSignUp::class, 'user_id', 'id')
+            ->where('status', '=', 1);
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(ExperienceReport::class, 'user_id', 'id');
+    }
+
+    public function user_logs()
+    {
+        return $this->hasMany(UserLog::class, 'user_id', 'id');
+    }
 }

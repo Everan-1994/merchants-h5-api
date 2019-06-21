@@ -74,7 +74,28 @@ $router->group([
             $router->patch('/', 'MemberController@changeStatus');           // 变更状态
         });
 
-        // 签到规则
+        // 用户
+        $router->group(['prefix' => 'user'], function ($router) {
+            /* @var \Laravel\Lumen\Routing\Router $router */
+            $router->get('/', 'UserController@index');                      // 列表
+            $router->patch('/{id}', 'UserController@updateStatus');         // 更新
+        });
+
+        // 反馈
+        $router->group(['prefix' => 'suggest'], function ($router) {
+            /* @var \Laravel\Lumen\Routing\Router $router */
+            $router->get('/', 'SuggestController@index');                      // 列表
+            $router->delete('/', 'SuggestController@delete');                  // 列表
+        });
+
+        // 中奖
+        $router->group(['prefix' => 'winning'], function ($router) {
+            /* @var \Laravel\Lumen\Routing\Router $router */
+            $router->get('/', 'WinningController@index');                      // 列表
+            $router->patch('/{id}', 'WinningController@updateStatus');         // 更新
+        });
+
+        // 签到规则&关于我们
         $router->group(['prefix' => 'others'], function ($router) {
             /* @var \Laravel\Lumen\Routing\Router $router */
             $router->get('/{id}', 'OtherController@show');                 // 详情
@@ -249,8 +270,12 @@ $router->group([
     $router->get('video/{id}', 'VideoController@getVideoList'); // 模块视频列表
 
 
-    $router->get('ts', function () {
-        return 'test';
-    });
+//    $router->get('ts', function () {
+//        $now = \Carbon\Carbon::now();
+//        return [
+//            $now->copy()->subDays(6)->toDateString() . ' 00:00:00',
+//            $now->copy()->toDateString() . ' 23:59:59'
+//        ];
+//    });
 
 });
