@@ -29,7 +29,7 @@ class ActivityResource extends Resource
                 // 存在 参数 id 时 合并 显示
                 'address'        => $this->address,
                 'limit'          => $this->limit,
-                'activity_intro' => $this->activity_intro,
+                'activity_intro' => json_decode($this->activity_intro, true),
                 'content'        => $this->content,
             ]),
             'signs'                 => $this->whenLoaded('signs'),

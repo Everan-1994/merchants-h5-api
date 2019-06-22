@@ -25,7 +25,7 @@ class TryUseResource extends Resource
             'front_cover'   => $this->front_cover,
             'stock'         => $this->stock,
             'price'         => $this->price,
-            'product_intro' => $this->when(!empty($request->route('id')), $this->product_intro),
+            'product_intro' => $this->when(!empty($request->route('id')), json_decode($this->product_intro, true)),
             'apply_end'     => Carbon::parse($this->apply_end)->toDateString(),
             'status'        => self::tryUseStatus($this->apply_start, $this->apply_end),
             'apply_status'          => $this->when(
