@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Share;
+use App\Models\Winning;
 use App\Models\Zan;
+use App\Observers\CheckInObserver;
 use App\Observers\ShareObserver;
 use App\Observers\ZanObserver;
 use Carbon\Carbon;
@@ -34,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
         Carbon::setLocale('zh');
         Share::observe(ShareObserver::class); // 分享观察器
         Zan::observe(ZanObserver::class); // 点赞观察器
+        Winning::observe(CheckInObserver::class); // 抽奖状态观察器
     }
 
     /**

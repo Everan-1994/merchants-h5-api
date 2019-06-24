@@ -44,7 +44,7 @@ class CheckInController extends Controller
 
         CheckIn::query()->create([
             'user_id'        => $this->user_id,
-            'status'         => CheckIn::NO_LOTTERY,
+            'status'         => CheckIn::NORMAL_CHECK,
             'check_in_time'  => $today,
             'check_in_times' => $check_num,
         ]);
