@@ -232,7 +232,7 @@ $router->group([
         $router->get('check_in', 'CheckInController@index'); // 签到列表
 
         $router->post('winning_info', 'WinningController@add'); // 录入中奖信息
-        $router->get('winning_info/{id}', 'WinningController@getWinningInfo'); // 中奖信息
+        $router->get('winning_info', 'WinningController@getWinningInfoByDate'); // 中奖信息
 
         $router->get('activity/{id}', 'ActivityController@getActivityDetail'); // 活动详情
         $router->post('activity_sign_up', 'ActivitySignUpController@add'); // 活动报名

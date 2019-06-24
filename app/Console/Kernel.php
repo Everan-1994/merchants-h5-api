@@ -2,6 +2,9 @@
 
 namespace App\Console;
 
+use App\Console\Commands\ActivityLuckDog;
+use App\Console\Commands\TryUseLuckDog;
+use App\Console\Commands\WriteReport;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +16,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-
+        ActivityLuckDog::class,
+        TryUseLuckDog::class,
+        WriteReport::class
     ];
 
     /**
@@ -23,6 +28,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-
+        $schedule->command('activity-luck-dog')
+            ->timezone('Asia/Shanghai')
+            ->everyMinute(); // 每分钟
     }
 }
