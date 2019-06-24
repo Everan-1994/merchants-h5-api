@@ -272,6 +272,7 @@ $router->group([
 
 //    $router->get('ts', function () {
 //        $now = \Carbon\Carbon::now();
+//        return $now->dayOfWeek;
 //        return [
 //            $now->copy()->subDays(6)->toDateString() . ' 00:00:00',
 //            $now->copy()->toDateString() . ' 23:59:59'

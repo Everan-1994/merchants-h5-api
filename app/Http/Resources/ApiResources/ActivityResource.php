@@ -27,10 +27,12 @@ class ActivityResource extends Resource
             'apply_time_prompt'     => self::getApplyTimePrompt($this->apply_start, $this->apply_end),
             $this->mergeWhen(!empty($request->route('id')), [
                 // 存在 参数 id 时 合并 显示
-                'address'        => $this->address,
-                'limit'          => $this->limit,
-                'activity_intro' => json_decode($this->activity_intro, true),
-                'content'        => $this->content,
+                'address'            => $this->address,
+                'limit'              => $this->limit,
+                'activity_intro'     => json_decode($this->activity_intro, true),
+                'content'            => $this->content,
+                'activity_time'      => self::activityTime($this->activity_start, $this->activity_end),
+                'activity_apply_end' => Carbon::parse($this->apply_end)->toDateTimeString(),
             ]),
             'signs'                 => $this->whenLoaded('signs'),
             'reports'               => ExperienceReportResource::collection($this->whenLoaded('reports')),
@@ -92,22 +94,42 @@ class ActivityResource extends Resource
         return $status;
     }
 
+    /**
+     * 申请状态
+     * @param $status
+     * @param $start_date
+     * @param $end_date
+     * @return int
+     */
     private function applyStatus($status, $start_date, $end_date)
     {
         $now = Carbon::now(); // 当前日期
         $start_date = Carbon::parse($start_date); // 开始时间
         $end_date = Carbon::parse($end_date); // 结束时间
 
-        $apply_status = '申请成功';
+        $apply_status = 2; // 申请成功
 
         if ($status < 1) {
             if ($now->copy()->gte($start_date->copy()) && $now->copy()->lt($end_date->copy())) {
-                $apply_status = '申请中';
+                $apply_status = 1; // 申请中
             } else {
-                $apply_status = '申请失败';
+                $apply_status = 0; // 申请失败
             }
         }
 
         return $apply_status;
+    }
+
+    private function activityTime($activity_start, $activity_end)
+    {
+        $start = Carbon::parse($activity_start); // 活动开始时间
+        $end = Carbon::parse($activity_end); // 活动结束时间
+
+        // 判断是否同一日
+        if ($start->copy()->toDateString() == $end->copy()->toDateString()) {
+            return $start->format('Y年m月d日 H:i') . '-' . $end->format('H:i');
+        }
+
+        return $start->format('Y年m月d日 H:i') . '-' . $end->format('Y年m月d日 H:i');
     }
 }

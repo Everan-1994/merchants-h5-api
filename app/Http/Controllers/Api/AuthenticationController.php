@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\UserLoginEvent;
 use App\Models\User;
+use App\Models\UserLog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Routing\Controller;
@@ -94,7 +96,8 @@ class AuthenticationController extends Controller
         // 给用户授权 token
         $token = Auth::guard('user')->fromUser($user);
 
-        event(new UserLoginEvent($user['id'])); // 添加日志记录事件
+        // event(new UserLoginEvent($user['id'])); // 添加日志记录事件
+        $this->userLog($user['id']);
 
         return response()->json([
             'errorCode' => 0,
@@ -162,4 +165,22 @@ class AuthenticationController extends Controller
         $this->app->menu->create($buttons);
     }
 
+    protected function userLog($user_id)
+    {
+        $now = Carbon::now();
+
+        $user_log = UserLog::query()->where('user_id', '=', $user_id)
+            ->whereBetween('created_at', [
+                $now->copy()->toDateString() . ' 00:00:00',
+                $now->copy()->toDateString() . ' 23:59:59',
+            ]);
+
+        if (!$user_log->exists()) {
+            return $user_log->create([
+                'user_id' => $user_id
+            ]);
+        }
+
+        return false;
+    }
 }

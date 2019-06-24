@@ -71,6 +71,9 @@ class WinningController extends Controller
         }
     }
 
+    /*
+     * 获取中奖信息 by id
+     */
     public function getWinningInfo($id)
     {
         $validator = Validator::make(['id' => $id], [
@@ -103,6 +106,55 @@ class WinningController extends Controller
             'district',
             'address',
         ])->find($id);
+
+        return response($winning_info);
+    }
+
+    /**
+     * 获取中奖信息 by date
+     * @param Request $request
+     * @return \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory
+     */
+    public function getWinningInfoByDate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'date'    => 'required|date_format:Y-m-d'
+        ], [
+            'date.required'    => '中奖日期不能为空',
+            'activity_id.date_format'     => '日期格式不正确'
+        ]);
+
+        if ($validator->fails()) {
+            return response([
+                'code'    => 1,
+                'message' => '参数缺失',
+                'errors'  => $validator->errors(),
+            ]);
+        }
+
+        $builder = Winning::query();
+
+        if (!$builder->where('user_id', Auth::guard('user')->user()->id)
+            ->whereBetween('created', [
+                $request->input('date') . '00:00:00',
+                $request->input('date') . '23:59:59'
+            ])
+            ->exists()) {
+            return response([
+                'code'    => 1,
+                'message' => '没有对应中奖信息',
+            ]);
+        }
+
+        $winning_info = $builder->select([
+            'prize_name',
+            'contact_name',
+            'contact_phone',
+            'province',
+            'city',
+            'district',
+            'address',
+        ])->first();
 
         return response($winning_info);
     }

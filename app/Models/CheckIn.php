@@ -10,7 +10,7 @@ class CheckIn extends ApiBaseModel
 
     public static $lotteryStatus = [
         self::EXPIRED_LOTTERY => '已过期',
-        self::NO_LOTTERY      => '未抽奖',
+        self::NO_LOTTERY      => '待抽奖',
         self::HAS_LOTTERY     => '已抽奖',
     ];
 

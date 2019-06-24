@@ -95,17 +95,19 @@ class CheckInController extends Controller
     {
         // 前一天 日期 y-m-d
         $prev_date = Carbon::now()->subDay()->toDateString();
+        // 今天周几
+        $week = Carbon::now()->dayOfWeek;
 
         $check_in_times = CheckIn::query()
             ->where('user_id', $this->user_id)
             ->where('check_in_time', $prev_date)
             ->value('check_in_times');
 
-        if ($check_in_times == 0 || $check_in_times == 7 || empty($check_in_times)) {
-            return 1;
-        } else {
+        if ($week - $check_in_times == 1) {
             return $check_in_times + 1;
         }
+
+        return 1;
     }
 
     /**

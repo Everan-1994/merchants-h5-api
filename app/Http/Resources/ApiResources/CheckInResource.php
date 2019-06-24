@@ -18,7 +18,7 @@ class CheckInResource extends Resource
     {
         return [
             'id' => $this->id,
-            'status' => CheckIn::$lotteryStatus[$this->status],
+            'status' => $this->status,
             'check_in_times' => $this->check_in_times,
             'check_in_time' => Carbon::parse($this->check_in_time)->toDateString(),
             'created_at' => Carbon::parse($this->created_at)->toDateTimeString()

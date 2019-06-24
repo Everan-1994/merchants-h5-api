@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\ApiResources\ExperienceReportResource;
+use App\Models\ExperienceReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -112,7 +113,7 @@ class ExperienceReportController extends Controller
 
         if ($request->exists('images')) {
             foreach ($request->file('images') as $k => $file) {
-                $images_url[] = Storage::disk('qiniu')->put('apply', $file);
+                $images_url[] = 'http://' . env('QINIU_DOMAIN') . '/' . Storage::disk('qiniu')->put('apply', $file);
             }
         }
 
