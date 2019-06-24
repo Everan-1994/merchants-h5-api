@@ -15,19 +15,15 @@ class ZanObserver
         if ($zan->type < 3) {
             $where = [
                 'user_id' => Auth::guard('user')->user()->id,
-                'type' => $zan->type,
-                'type_id' => $zan->type_id
+                'type'    => $zan->type,
+                'type_id' => $zan->type_id,
             ];
             ExperienceReport::query()->where($where)->increment('like_times');
         }
 
         // 评论
         if ($zan->type == 3) {
-            $where = [
-                'user_id' => Auth::guard('user')->user()->id,
-                'topic_id' => $zan->type_id
-            ];
-            Comment::query()->where($where)->increment('like_times');
+            Comment::query()->where('id', $zan->type_id)->increment('like_times');
         }
     }
 
@@ -37,19 +33,15 @@ class ZanObserver
         if ($zan->type < 3) {
             $where = [
                 'user_id' => Auth::guard('user')->user()->id,
-                'type' => $zan->type,
-                'type_id' => $zan->type_id
+                'type'    => $zan->type,
+                'type_id' => $zan->type_id,
             ];
             ExperienceReport::query()->where($where)->decrement('like_times');
         }
 
         // 评论
         if ($zan->type == 3) {
-            $where = [
-                'user_id' => Auth::guard('user')->user()->id,
-                'topic_id' => $zan->type_id
-            ];
-            Comment::query()->where($where)->decrement('like_times');
+            Comment::query()->where('id', $zan->type_id)->decrement('like_times');
         }
     }
 }
