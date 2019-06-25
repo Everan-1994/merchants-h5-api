@@ -30,6 +30,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('activity-luck-dog')
             ->timezone('Asia/Shanghai')
-            ->everyMinute(); // 每分钟
+            ->everyMinute() // 每分钟
+            ->runInBackground(); // 并行执行
     }
 }

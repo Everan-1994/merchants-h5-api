@@ -269,13 +269,18 @@ $router->group([
     $router->get('video', 'VideoController@index'); // 视频模块列表
     $router->get('video/{id}', 'VideoController@getVideoList'); // 模块视频列表
 
+    $router->get('ts', 'PrizeController@ts');
+
 
 //    $router->get('ts', function () {
+//        app('db')->enableQueryLog();
 //        $now = \Carbon\Carbon::now();
-//        return [
-//            $now->copy()->subDays(6)->toDateString() . ' 00:00:00',
-//            $now->copy()->toDateString() . ' 23:59:59'
-//        ];
+//        $a = \App\Models\Activity::query()
+//            ->where('apply_end', $now->toDateTimeString())
+//            ->get();
+//        $log = app('db')->getQueryLog();
+//        var_dump($log); die;
+//        return response($a);
 //    });
 
 });

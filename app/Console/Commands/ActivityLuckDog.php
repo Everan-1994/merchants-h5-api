@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Activity;
 use App\Models\ActivitySignUp;
+use App\Models\Notify;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -36,7 +37,7 @@ class ActivityLuckDog extends Command
             ->where('apply_end', $now->toDateTimeString())
             ->get();
 
-        if ($activity->isNotEmpty()) {
+        if (!empty($activity)) {
             $activity_ids = $activity->pluck('id')->all(); // id 集合
             $activity_limits = $activity->pluck('limit', 'id')->all(); // id => 上限 键值对
             $activity_names = $activity->pluck('name', 'id')->all(); // id => 活动名称 键值对
@@ -47,14 +48,45 @@ class ActivityLuckDog extends Command
                 ->orderBy('created_at', 'asc')
                 ->get();
 
-            $activity_sign_ups_ids = $activity_sign_ups->pluck('id')->all(); // 报名 id 集合
+            // 报名列表按活动id分组
+            $activity_sign_group = $activity_sign_ups->groupBy('activity_id');
 
-            $notify = [];
+            $sign_list = []; // 符合规则的报名列表
+            $sign_ids = []; // 符合规则的报名 id 集合
 
-            $activity_sign_ups->each(function ($item, $key) {
-                
-            });
+            foreach ($activity_sign_group as $key => $item) {
+                $limit = $activity_limits[$key];
+                $name = $activity_names[$key];
+                $signs = collect($item)->filter(function ($v, $i) use ($limit) {
+                    return $i < $limit;
+                });
 
+                foreach ($signs as $k => $sign) {
+                    $sign_ids[] = $sign->id;
+                    $sign_list[] = [
+                        'sign_id' => $sign->id,
+                        'user_id' => $sign->user_id,
+                        'title'   => $name,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ];
+                }
+            }
+
+            if (!empty($sign_list)) {
+                \DB::beginTransaction();
+                try {
+                    // 生成消息
+                    Notify::query()->insert($sign_list);
+                    // 改变报名状态
+                    ActivitySignUp::query()->whereIn('id', $sign_ids)->update(['status' => 1]);
+
+                    \DB::commit();
+                } catch (\Exception $exception) {
+                    \DB::rollBack();
+                    \Log::info('activity_notify_error：' . $exception->getMessage());
+                }
+            }
         }
     }
 }

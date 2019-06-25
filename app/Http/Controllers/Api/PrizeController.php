@@ -38,7 +38,8 @@ class PrizeController extends Controller
      * @param $pro_arr
      * @return int|string
      */
-    protected function getRand($pro_arr) {
+    protected function getRand($pro_arr)
+    {
         $rs = ''; // 中奖结果
         $proSum = array_sum($pro_arr); // 概率数组的总概率精度
         // 概率数组循环
