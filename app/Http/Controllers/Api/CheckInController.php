@@ -100,7 +100,10 @@ class CheckInController extends Controller
 
         $check_in_times = CheckIn::query()
             ->where('user_id', $this->user_id)
-            ->where('check_in_time', $prev_date)
+            ->whereBetween('check_in_time', [
+                $prev_date . ' 00:00:00',
+                $prev_date . ' 23:59:59'
+            ])
             ->value('check_in_times');
 
         if ($week - $check_in_times == 1) {

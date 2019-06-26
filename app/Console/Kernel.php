@@ -32,5 +32,10 @@ class Kernel extends ConsoleKernel
             ->timezone('Asia/Shanghai')
             ->everyMinute() // 每分钟
             ->runInBackground(); // 并行执行
+
+        $schedule->command('try-use-luck-dog')
+            ->timezone('Asia/Shanghai')
+            ->everyMinute() // 每分钟
+            ->runInBackground(); // 并行执行
     }
 }

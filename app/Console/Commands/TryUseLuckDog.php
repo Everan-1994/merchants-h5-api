@@ -2,6 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Notify;
+use App\Models\TryUse;
+use App\Models\UseSignUp;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class TryUseLuckDog extends Command
@@ -27,6 +31,62 @@ class TryUseLuckDog extends Command
 
     public function handle()
     {
+        $now = Carbon::now();
+        // 获取报名到期的活动
+        $try_use = TryUse::query()
+            ->where('apply_end', $now->toDateTimeString())
+            ->get();
 
+        if (!empty($try_use)) {
+            $try_use_ids = $try_use->pluck('id')->all(); // id 集合
+            $try_use_limits = $try_use->pluck('limit', 'id')->all(); // id => 上限 键值对
+            $try_use_names = $try_use->pluck('name', 'id')->all(); // id => 活动名称 键值对
+
+            // 获取报名数据
+            $try_use_sign_ups = UseSignUp::query()->whereIn('use_id', $try_use_ids)
+                ->orderBy('share_times', 'desc')
+                ->orderBy('created_at', 'asc')
+                ->get();
+
+            // 报名列表按活动id分组
+            $try_use_sign_group = $try_use_sign_ups->groupBy('use_id');
+
+            $sign_list = []; // 符合规则的报名列表
+            $sign_ids = []; // 符合规则的报名 id 集合
+
+            foreach ($try_use_sign_group as $key => $item) {
+                $limit = $try_use_limits[$key];
+                $name = $try_use_names[$key];
+                $signs = collect($item)->filter(function ($v, $i) use ($limit) {
+                    return $i < $limit;
+                });
+
+                foreach ($signs as $k => $sign) {
+                    $sign_ids[] = $sign->id;
+                    $sign_list[] = [
+                        'sign_id' => $sign->id,
+                        'user_id' => $sign->user_id,
+                        'title'   => $name,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ];
+                }
+            }
+
+            if (!empty($sign_list)) {
+                \DB::beginTransaction();
+                try {
+                    // 生成消息
+                    Notify::query()->insert($sign_list);
+                    // 改变申请状态
+                    UseSignUp::query()->whereIn('id', $sign_ids)->update(['status' => 1]);
+
+                    \DB::commit();
+                } catch (\Exception $exception) {
+                    \DB::rollBack();
+                    \Log::info('try_use_notify_error：' . $exception->getMessage());
+                }
+            }
+        }
     }
 }
