@@ -42,7 +42,7 @@ class TryUseController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '参数缺失',
                 'errors'  => $validator->errors(),
             ]);
@@ -52,7 +52,7 @@ class TryUseController extends Controller
 
         if (!$builder->where('id', $id)->exists()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '没有找到对应的试用商品',
             ]);
         }

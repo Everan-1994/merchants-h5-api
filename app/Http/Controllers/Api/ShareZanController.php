@@ -30,7 +30,7 @@ class ShareZanController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '信息有误',
                 'errors'  => $validator->errors(),
             ]);
@@ -54,7 +54,7 @@ class ShareZanController extends Controller
 
         if (!$builder->where($where)->exists()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '该用户暂无此活动或试用的申请'
             ]);
         }
@@ -71,12 +71,12 @@ class ShareZanController extends Controller
             Share::query()->create($share_info);
 
             return response([
-                'code'    => 0,
+                'errorCode'    => 0,
                 'message' => 'success',
             ]);
         } catch (\Exception $exception) {
             return response([
-                'code'    => $exception->getCode(),
+                'errorCode'    => $exception->getCode(),
                 'message' => '服务器错误',
                 'error'   => $exception->getMessage(),
             ]);
@@ -95,7 +95,7 @@ class ShareZanController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '信息有误',
                 'errors'  => $validator->errors(),
             ]);
@@ -121,12 +121,12 @@ class ShareZanController extends Controller
             }
 
             return response([
-                'code'    => 0,
+                'errorCode'    => 0,
                 'message' => 'success',
             ]);
         } catch (\Exception $exception) {
             return response([
-                'code'    => $exception->getCode(),
+                'errorCode'    => $exception->getCode(),
                 'message' => '服务器错误',
                 'error'   => $exception->getMessage(),
             ]);

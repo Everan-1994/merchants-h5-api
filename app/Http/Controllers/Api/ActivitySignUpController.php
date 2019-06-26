@@ -32,7 +32,7 @@ class ActivitySignUpController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '报名信息有误',
                 'errors'  => $validator->errors(),
             ]);
@@ -49,7 +49,7 @@ class ActivitySignUpController extends Controller
             ['activity_id', '=', $activity_id],
         ])->exists()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '该活动已报名',
             ]);
         }
@@ -67,12 +67,12 @@ class ActivitySignUpController extends Controller
             $builder->create($sign_up_info);
 
             return response([
-                'code'    => 0,
+                'errorCode'    => 0,
                 'message' => 'success',
             ]);
         } catch (\Exception $exception) {
             return response([
-                'code'    => $exception->getCode(),
+                'errorCode'    => $exception->getCode(),
                 'message' => '服务器错误',
                 'error'   => $exception->getMessage(),
             ]);

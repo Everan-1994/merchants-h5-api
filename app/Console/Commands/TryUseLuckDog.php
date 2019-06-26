@@ -64,11 +64,13 @@ class TryUseLuckDog extends Command
                 foreach ($signs as $k => $sign) {
                     $sign_ids[] = $sign->id;
                     $sign_list[] = [
-                        'sign_id' => $sign->id,
-                        'user_id' => $sign->user_id,
-                        'title'   => $name,
+                        'sign_id'    => $sign->id,
+                        'user_id'    => $sign->user_id,
+                        'title'      => $name,
+                        'type'       => 1, // 试用
+                        'status'     => 0, // 默认未发送
                         'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now()
+                        'updated_at' => Carbon::now(),
                     ];
                 }
             }

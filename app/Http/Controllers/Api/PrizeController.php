@@ -55,5 +55,4 @@ class PrizeController extends Controller
         unset($proArr);
         return $rs;
     }
-
 }

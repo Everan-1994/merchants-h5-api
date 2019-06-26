@@ -52,7 +52,7 @@ class TopicController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '评论信息有误',
                 'errors'  => $validator->errors(),
             ]);
@@ -69,12 +69,12 @@ class TopicController extends Controller
             Comment::query()->create($comment_info);
 
             return response([
-                'code'    => 0,
+                'errorCode'    => 0,
                 'message' => 'success',
             ]);
         } catch (\Exception $exception) {
             return response([
-                'code'    => $exception->getCode(),
+                'errorCode'    => $exception->getCode(),
                 'message' => '服务器错误',
                 'error'   => $exception->getMessage(),
             ]);
@@ -94,7 +94,7 @@ class TopicController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '参数缺失',
                 'errors'  => $validator->errors(),
             ]);
@@ -105,7 +105,7 @@ class TopicController extends Controller
         if ($comment->value('user_id')
             !== Auth::guard('user')->user()->id) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '不能删除非本人的评论',
             ]);
         }
@@ -115,12 +115,12 @@ class TopicController extends Controller
             $comment->delete();
 
             return response([
-                'code'    => 0,
+                'errorCode'    => 0,
                 'message' => 'success',
             ]);
         } catch (\Exception $exception) {
             return response([
-                'code'    => $exception->getCode(),
+                'errorCode'    => $exception->getCode(),
                 'message' => '服务器错误',
                 'error'   => $exception->getMessage(),
             ]);
@@ -141,7 +141,7 @@ class TopicController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '参数缺失',
                 'errors'  => $validator->errors(),
             ]);
@@ -151,7 +151,7 @@ class TopicController extends Controller
 
         if (!$builder->where('id', $id)->exists()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '没有找到对应的话题',
             ]);
         }

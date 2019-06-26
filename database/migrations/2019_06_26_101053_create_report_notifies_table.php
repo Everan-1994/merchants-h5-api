@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNotifiesTable extends Migration
+class CreateReportNotifiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateNotifiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('notifies', function (Blueprint $table) {
+        Schema::create('report_notifies', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedInteger('sign_id')->comment('活动或试用id');
+            $table->tinyInteger('type')->comment('1活动2试用');
             $table->string('title')->comment('活动或试用标题');
             $table->tinyInteger('status')->default(0)->comment('0未发送，1已发送');
             $table->timestamps();

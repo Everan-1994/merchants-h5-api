@@ -40,7 +40,7 @@ class VideoController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '参数缺失',
                 'errors'  => $validator->errors(),
             ]);
@@ -53,7 +53,7 @@ class VideoController extends Controller
 
         if (!$builder->where('blockId', $id)->exists()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '没有找到对应的视频列表',
             ]);
         }
@@ -62,7 +62,7 @@ class VideoController extends Controller
             ['blockId', '=', $id],
             ['status', '=', 1],
         ])
-            ->select(['id', 'title', 'watch_times', 'video'])
+            ->select(['id', 'title', 'watch_times', 'video', 'front_cover'])
             ->orderBy('sort', 'desc')
             ->paginate($page_size, ['*'], 'page', $page);
 

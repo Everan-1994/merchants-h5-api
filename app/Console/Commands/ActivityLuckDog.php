@@ -64,11 +64,13 @@ class ActivityLuckDog extends Command
                 foreach ($signs as $k => $sign) {
                     $sign_ids[] = $sign->id;
                     $sign_list[] = [
-                        'sign_id' => $sign->id,
-                        'user_id' => $sign->user_id,
-                        'title'   => $name,
+                        'sign_id'    => $sign->id,
+                        'user_id'    => $sign->user_id,
+                        'title'      => $name,
+                        'type'       => 1,
+                        'status'     => 0,
                         'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now()
+                        'updated_at' => Carbon::now(),
                     ];
                 }
             }

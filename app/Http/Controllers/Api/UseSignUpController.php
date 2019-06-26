@@ -38,7 +38,7 @@ class UseSignUpController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '报名信息有误',
                 'errors'  => $validator->errors(),
             ]);
@@ -55,7 +55,7 @@ class UseSignUpController extends Controller
             ['use_id', '=', $use_id],
         ])->exists()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '已经参与过申请',
             ]);
         }
@@ -76,12 +76,12 @@ class UseSignUpController extends Controller
             $builder->create($sign_up_info);
 
             return response([
-                'code'    => 0,
+                'errorCode'    => 0,
                 'message' => 'success',
             ]);
         } catch (\Exception $exception) {
             return response([
-                'code'    => $exception->getCode(),
+                'errorCode'    => $exception->getCode(),
                 'message' => '服务器错误',
                 'error'   => $exception->getMessage(),
             ]);

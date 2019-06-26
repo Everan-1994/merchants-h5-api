@@ -37,7 +37,7 @@ class WinningController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '中奖信息有误',
                 'errors'  => $validator->errors(),
             ]);
@@ -59,12 +59,12 @@ class WinningController extends Controller
             Winning::query()->create($winning_info);
 
             return response([
-                'code'    => 0,
+                'errorCode'    => 0,
                 'message' => 'success',
             ]);
         } catch (\Exception $exception) {
             return response([
-                'code'    => $exception->getCode(),
+                'errorCode'    => $exception->getCode(),
                 'message' => '服务器错误',
                 'error'   => $exception->getMessage(),
             ]);
@@ -82,7 +82,7 @@ class WinningController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '参数缺失',
                 'errors'  => $validator->errors(),
             ]);
@@ -92,7 +92,7 @@ class WinningController extends Controller
 
         if (!$builder->where('id', $id)->exists()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '没有对应中奖信息',
             ]);
         }
@@ -126,7 +126,7 @@ class WinningController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '参数缺失',
                 'errors'  => $validator->errors(),
             ]);
@@ -141,7 +141,7 @@ class WinningController extends Controller
             ])
             ->exists()) {
             return response([
-                'code'    => 1,
+                'errorCode'    => 1,
                 'message' => '没有对应中奖信息',
             ]);
         }

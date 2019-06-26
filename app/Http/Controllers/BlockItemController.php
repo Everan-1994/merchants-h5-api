@@ -88,6 +88,7 @@ class BlockItemController extends Controller
         $params = $this->validate($request, [
             'blockId' => 'required|int',
             'title' => 'string|max:255',
+            'front_cover' => 'string',
             'video' => 'string',
             'sort' => 'int',
         ]);
