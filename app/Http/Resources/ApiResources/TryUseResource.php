@@ -32,7 +32,7 @@ class TryUseResource extends Resource
                 in_array('my', explode('/', $request->getRequestUri())),
                 self::applyStatus($this->apply_status, $this->apply_start, $this->apply_end)
             ),
-            'signs'         => UserAvatarResource::collection($this->whenLoaded('signs')),
+            'signs'         => UserAvatarResource::collection($this->signs),
             'reports'       => ExperienceReportResource::collection($this->whenLoaded('reports')),
         ];
     }

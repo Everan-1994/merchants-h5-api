@@ -191,6 +191,11 @@ class MemberController extends Controller
         ]);
     }
 
+    /**
+     * 我的试用
+     * @param Request $request
+     * @return \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory
+     */
     public function myTryUse(Request $request)
     {
         $page = $request->input('page', 1);
