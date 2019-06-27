@@ -25,7 +25,7 @@ $router->group([
         $router->get('accessList', 'AdminAuthController@accessList');
 
         // 后端首页看板数据接口
-        $router->get('board', 'AdminAuthController@board');
+        $router->get('home', 'HomeController@home');
 
         // 退出登陆
         $router->delete('logout', 'AdminAuthController@logout');
@@ -268,6 +268,11 @@ $router->group([
     $router->get('topic', 'TopicController@index'); // 话题列表
     $router->get('video', 'VideoController@index'); // 视频模块列表
     $router->get('video/{id}', 'VideoController@getVideoList'); // 模块视频列表
+
+//    $router->get('ts', function () {
+//        $now = \Carbon\Carbon::now();
+//        echo $now->copy()->month;
+//    });
 
 //    $router->get('ts', function () {
 //        app('db')->enableQueryLog();
