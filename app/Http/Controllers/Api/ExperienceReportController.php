@@ -25,9 +25,9 @@ class ExperienceReportController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'errorCode'    => 1,
-                'message' => '参数缺失',
-                'errors'  => $validator->errors(),
+                'errorCode' => 1,
+                'message'   => '参数缺失',
+                'errors'    => $validator->errors(),
             ]);
         }
 
@@ -35,8 +35,8 @@ class ExperienceReportController extends Controller
 
         if (!$builder->where('id', $id)->exists()) {
             return response([
-                'errorCode'    => 1,
-                'message' => '没有找到对应的报告',
+                'errorCode' => 1,
+                'message'   => '没有找到对应的报告',
             ]);
         }
 
@@ -70,9 +70,9 @@ class ExperienceReportController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'errorCode'    => 1,
-                'message' => '信息有误',
-                'errors'  => $validator->errors(),
+                'errorCode' => 1,
+                'message'   => '信息有误',
+                'errors'    => $validator->errors(),
             ]);
         }
 
@@ -84,20 +84,21 @@ class ExperienceReportController extends Controller
 
         try {
             // 心得
-            ExperienceReport::query()->updateOrCreate($report_info, [
+            $report = ExperienceReport::query()->updateOrCreate($report_info, [
                 'content' => $request->input('content'),
                 'images'  => $request->exists('images') ? json_encode($request->input('images')) : '',
             ]);
 
             return response([
-                'errorCode'    => 0,
-                'message' => 'success',
+                'id'        => $report['id'],
+                'errorCode' => 0,
+                'message'   => 'success',
             ]);
         } catch (\Exception $exception) {
             return response([
-                'errorCode'    => $exception->getCode(),
-                'message' => '服务器错误',
-                'error'   => $exception->getMessage(),
+                'errorCode' => $exception->getCode(),
+                'message'   => '服务器错误',
+                'error'     => $exception->getMessage(),
             ]);
         }
     }

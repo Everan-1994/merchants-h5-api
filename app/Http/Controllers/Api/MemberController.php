@@ -48,9 +48,9 @@ class MemberController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'errorCode'    => 1,
-                'message' => '建议信息有误',
-                'errors'  => $validator->errors(),
+                'errorCode' => 1,
+                'message'   => '建议信息有误',
+                'errors'    => $validator->errors(),
             ]);
         }
 
@@ -70,14 +70,14 @@ class MemberController extends Controller
             $builder->create($suggest_info);
 
             return response([
-                'errorCode'    => 0,
-                'message' => 'success',
+                'errorCode' => 0,
+                'message'   => 'success',
             ]);
         } catch (\Exception $exception) {
             return response([
-                'errorCode'    => $exception->getCode(),
-                'message' => '服务器错误',
-                'error'   => $exception->getMessage(),
+                'errorCode' => $exception->getCode(),
+                'message'   => '服务器错误',
+                'error'     => $exception->getMessage(),
             ]);
         }
     }
@@ -99,9 +99,9 @@ class MemberController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'errorCode'    => 1,
-                'message' => '信息有误',
-                'errors'  => $validator->errors(),
+                'errorCode' => 1,
+                'message'   => '信息有误',
+                'errors'    => $validator->errors(),
             ]);
         }
 
@@ -113,14 +113,14 @@ class MemberController extends Controller
             ]);
 
             return response([
-                'errorCode'    => 0,
-                'message' => 'success',
+                'errorCode' => 0,
+                'message'   => 'success',
             ]);
         } catch (\Exception $exception) {
             return response([
-                'errorCode'    => $exception->getCode(),
-                'message' => '服务器错误',
-                'error'   => $exception->getMessage(),
+                'errorCode' => $exception->getCode(),
+                'message'   => '服务器错误',
+                'error'     => $exception->getMessage(),
             ]);
         }
     }
@@ -158,7 +158,10 @@ class MemberController extends Controller
             $builder = UseSignUp::query()->with(['try_use']); // 参与的试用
         }
 
-        return $builder->where('user_id', Auth::guard('user')->user()->id)
+        return $builder->where([
+            'user_id' => Auth::guard('user')->user()->id,
+            'status'  => 1,
+        ])
             ->orderBy('created_at', 'desc')
             ->paginate($page_size, ['*'], 'page', $page);
     }
@@ -186,8 +189,8 @@ class MemberController extends Controller
         });
 
         return response([
-            'data' =>  ActivityResource::collection($activity_arr),
-            'total' => $activity->total()
+            'data'  => ActivityResource::collection($activity_arr),
+            'total' => $activity->total(),
         ]);
     }
 
@@ -214,8 +217,8 @@ class MemberController extends Controller
         });
 
         return response([
-            'data' =>  TryUseResource::collection($try_use_arr),
-            'total' => $try_use->total()
+            'data'  => TryUseResource::collection($try_use_arr),
+            'total' => $try_use->total(),
         ]);
     }
 }
