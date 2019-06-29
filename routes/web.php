@@ -269,10 +269,10 @@ $router->group([
     $router->get('video', 'VideoController@index'); // 视频模块列表
     $router->get('video/{id}', 'VideoController@getVideoList'); // 模块视频列表
 
-//    $router->get('ts', function () {
-//        $now = \Carbon\Carbon::now();
-//        echo $now->copy()->month;
-//    });
+    $router->get('ts', function () {
+        $now = \Carbon\Carbon::now();
+        echo $now->copy()->dayOfWeek;
+    });
 
 //    $router->get('ts', function () {
 //        app('db')->enableQueryLog();
