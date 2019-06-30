@@ -20,23 +20,22 @@ class ExperienceReportResource extends Resource
             'user'            => $this->user,
             'activity_report' => $this->whenLoaded('activity_report'),
             'try_use_report'  => $this->whenLoaded('try_use_report'),
-            'has_zan'         => self::hasZan($this->id)
+            'has_zan'         => self::hasZan($this->id, $this->type),
         ];
     }
 
     /**
      * 判断是否点过赞
      * @param $id
+     * @param $type
      * @return bool
      */
-    private function hasZan($id)
+    private function hasZan($id, $type)
     {
-        $er = ExperienceReport::query()->find($id);
-
         return Zan::query()->where([
             'user_id' => Auth::guard('user')->user()->id,
-            'type'    => $er['type'],
-            'type_id' => $er['type_id'],
+            'type'    => $type,
+            'type_id' => $id,
         ])->exists();
     }
 }
