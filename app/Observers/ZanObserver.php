@@ -5,7 +5,6 @@ namespace App\Observers;
 use App\Models\Comment;
 use App\Models\ExperienceReport;
 use App\Models\Zan;
-use Illuminate\Support\Facades\Auth;
 
 class ZanObserver
 {

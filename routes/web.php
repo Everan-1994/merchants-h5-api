@@ -268,6 +268,7 @@ $router->group([
     $router->get('topic', 'TopicController@index'); // 话题列表
     $router->get('video', 'VideoController@index'); // 视频模块列表
     $router->get('video/{id}', 'VideoController@getVideoList'); // 模块视频列表
+    $router->post('watch', 'VideoController@watch'); // 观看计数
 
     $router->get('ts', function () {
         $now = \Carbon\Carbon::now();

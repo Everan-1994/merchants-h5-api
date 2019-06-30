@@ -36,8 +36,6 @@ class ShareZanController extends Controller
             ]);
         }
 
-
-
         if ($request->input('type') == 1) {
             $builder = ActivitySignUp::query();
             $where = [
@@ -52,7 +50,7 @@ class ShareZanController extends Controller
             ];
         }
 
-        if (!$builder->where($where)->exists()) {
+        if ($builder->where($where)->exists()) {
             return response([
                 'errorCode'    => 1,
                 'message' => '该用户暂无此活动或试用的申请'

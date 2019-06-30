@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Models\Share;
+use App\Models\Watch;
 use App\Models\Winning;
 use App\Models\Zan;
 use App\Observers\CheckInObserver;
 use App\Observers\ShareObserver;
+use App\Observers\WatchObserver;
 use App\Observers\ZanObserver;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
@@ -37,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         Share::observe(ShareObserver::class); // 分享观察器
         Zan::observe(ZanObserver::class); // 点赞观察器
         Winning::observe(CheckInObserver::class); // 抽奖状态观察器
+        Watch::observe(WatchObserver::class); // 视频观看观察器
     }
 
     /**
