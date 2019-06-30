@@ -137,28 +137,8 @@ class AuthenticationController extends Controller
         $buttons = [
             [
                 "type" => "view",
-                "name" => "授权页",
-                "url"  => env('APP_URL') . '/api/oauth',
-            ],
-            [
-                "type" => "view",
-                "name" => "授权信息",
-                "url"  => env('APP_URL') . '/api/user',
-            ],
-            [
-                "name"       => "其他",
-                "sub_button" => [
-                    [
-                        "type" => "view",
-                        "name" => "送货单表",
-                        "url"  => "http://www.baidu.com/",
-                    ],
-                    [
-                        "type" => "view",
-                        "name" => "个人中心",
-                        "url"  => "http://www.baidu.com/",
-                    ],
-                ],
+                "name" => "招商h5",
+                "url"  => 'http://mh5.lzdu.com/',
             ],
         ];
 
