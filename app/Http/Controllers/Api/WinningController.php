@@ -18,40 +18,34 @@ class WinningController extends Controller
     public function add(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'prize_name'    => 'required',
-            'contact_name'  => 'required',
-            'contact_phone' => 'required',
-            'province'      => 'required',
-            'city'          => 'required',
-            'district'      => 'required',
-            'address'       => 'required',
+            'prize_name'   => 'required',
+            'prize_img'    => 'required',
+            'prize_status' => 'required',
         ], [
-            'prize_name.required'    => '奖品名称不能为空',
-            'contact_name.required'  => '请填写联系人',
-            'contact_phone.required' => '请填写联系号码',
-            'province.required'      => '请选择省份',
-            'city.required'          => '请选择市',
-            'district.required'      => '请选择区',
-            'address.required'       => '请填写详细收件地址',
+            'prize_name.required'   => '奖品名称不能为空',
+            'prize_img.required'    => '奖品图片不能为空',
+            'prize_status.required' => '奖品状态不能为空',
         ]);
 
         if ($validator->fails()) {
             return response([
-                'errorCode'    => 1,
-                'message' => '中奖信息有误',
-                'errors'  => $validator->errors(),
+                'errorCode' => 1,
+                'message'   => '中奖信息有误',
+                'errors'    => $validator->errors(),
             ]);
         }
 
         $winning_info = [
             'user_id'       => Auth::guard('user')->user()->id,
             'prize_name'    => $request->input('prize_name'),
-            'contact_name'  => $request->input('contact_name'),
-            'contact_phone' => $request->input('contact_phone'),
-            'province'      => $request->input('province'),
-            'city'          => $request->input('city'),
-            'district'      => $request->input('district'),
-            'address'       => $request->input('address'),
+            'prize_img'     => $request->input('prize_img'),
+            'contact_name'  => $request->input('contact_name', ''),
+            'contact_phone' => $request->input('contact_phone', ''),
+            'province'      => $request->input('province', ''),
+            'city'          => $request->input('city', ''),
+            'district'      => $request->input('district', ''),
+            'address'       => $request->input('address', ''),
+            'prize_status'  => $request->input('prize_status'),
         ];
 
         try {
@@ -59,14 +53,14 @@ class WinningController extends Controller
             Winning::query()->create($winning_info);
 
             return response([
-                'errorCode'    => 0,
-                'message' => 'success',
+                'errorCode' => 0,
+                'message'   => 'success',
             ]);
         } catch (\Exception $exception) {
             return response([
-                'errorCode'    => $exception->getCode(),
-                'message' => '服务器错误',
-                'error'   => $exception->getMessage(),
+                'errorCode' => $exception->getCode(),
+                'message'   => '服务器错误',
+                'error'     => $exception->getMessage(),
             ]);
         }
     }
@@ -82,9 +76,9 @@ class WinningController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'errorCode'    => 1,
-                'message' => '参数缺失',
-                'errors'  => $validator->errors(),
+                'errorCode' => 1,
+                'message'   => '参数缺失',
+                'errors'    => $validator->errors(),
             ]);
         }
 
@@ -92,13 +86,15 @@ class WinningController extends Controller
 
         if (!$builder->where('id', $id)->exists()) {
             return response([
-                'errorCode'    => 1,
-                'message' => '没有对应中奖信息',
+                'errorCode' => 1,
+                'message'   => '没有对应中奖信息',
             ]);
         }
 
         $winning_info = $builder->select([
             'prize_name',
+            'prize_img',
+            'prize_status',
             'contact_name',
             'contact_phone',
             'province',
@@ -118,17 +114,17 @@ class WinningController extends Controller
     public function getWinningInfoByDate(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'date'    => 'required|date_format:Y-m-d'
+            'date' => 'required|date_format:Y-m-d',
         ], [
             'date.required'    => '中奖日期不能为空',
-            'activity_id.date_format'     => '日期格式不正确'
+            'date.date_format' => '日期格式不正确',
         ]);
 
         if ($validator->fails()) {
             return response([
-                'errorCode'    => 1,
-                'message' => '参数缺失',
-                'errors'  => $validator->errors(),
+                'errorCode' => 1,
+                'message'   => '参数缺失',
+                'errors'    => $validator->errors(),
             ]);
         }
 
@@ -137,17 +133,19 @@ class WinningController extends Controller
         if (!$builder->where('user_id', Auth::guard('user')->user()->id)
             ->whereBetween('created_at', [
                 $request->input('date') . '00:00:00',
-                $request->input('date') . '23:59:59'
+                $request->input('date') . '23:59:59',
             ])
             ->exists()) {
             return response([
-                'errorCode'    => 1,
-                'message' => '没有对应中奖信息',
+                'errorCode' => 1,
+                'message'   => '没有对应中奖信息',
             ]);
         }
 
         $winning_info = $builder->select([
             'prize_name',
+            'prize_img',
+            'prize_status',
             'contact_name',
             'contact_phone',
             'province',

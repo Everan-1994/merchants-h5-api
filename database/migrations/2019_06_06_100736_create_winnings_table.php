@@ -18,6 +18,8 @@ class CreateWinningsTable extends Migration
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('prize_name')->comment('奖品名称');
+            $table->string('prize_img')->comment('奖品图片');
+            $table->tinyInteger('prize_status')->default(0)->comment('是否是奖品 0否 1是');
             $table->string('contact_name')->comment('联系人');
             $table->string('contact_phone')->comment('联系手机');
             $table->string('province')->comment('省');
