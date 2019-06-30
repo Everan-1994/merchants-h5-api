@@ -269,13 +269,14 @@ $router->group([
     $router->get('video', 'VideoController@index'); // 视频模块列表
     $router->get('video/{id}', 'VideoController@getVideoList'); // 模块视频列表
     $router->post('watch', 'VideoController@watch'); // 观看计数
+    $router->get('wx_config', 'AuthenticationController@wxConfig'); // 微信配置
 
     $router->get('ts', function () {
         $now = \Carbon\Carbon::now();
         echo $now->copy()->dayOfWeek;
     });
 
-//    $router->get('ts', function () {
+//    $router->get('ts', function () {p
 //        app('db')->enableQueryLog();
 //        $now = \Carbon\Carbon::now();
 //        $a = \App\Models\Activity::query()

@@ -183,4 +183,11 @@ class AuthenticationController extends Controller
 
         return false;
     }
+
+    public function wxConfig(Request $request)
+    {
+        $this->app->jssdk->setUrl($request->getUri());
+
+        return $this->app->jssdk->buildConfig(["onMenuShareAppMessage","onMenuShareTimeline"], true);
+    }
 }
