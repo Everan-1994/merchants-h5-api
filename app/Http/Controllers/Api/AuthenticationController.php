@@ -166,7 +166,7 @@ class AuthenticationController extends Controller
 
     public function wxConfig(Request $request)
     {
-        $this->app->jssdk->setUrl($request->getUri());
+        $this->app->jssdk->setUrl($request->input('url'));
 
         return $this->app->jssdk->buildConfig(["onMenuShareAppMessage","onMenuShareTimeline"], true);
     }
