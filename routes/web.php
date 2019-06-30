@@ -2,7 +2,7 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 $router->group([
-    'prefix' => 'admin', // 前缀
+    'prefix'     => 'admin', // 前缀
     'middleware' => ['cors'],
 ], function ($router) {
     /* @var \Laravel\Lumen\Routing\Router $router */
@@ -223,7 +223,7 @@ $router->group([
 
     $router->post('login', 'AuthenticationController@login');
 
-    // $router->get('menu', 'AuthenticationController@menu');
+    $router->get('menu', 'AuthenticationController@menu');
 
     // 需要授权登录才能访问
     $router->group(['middleware' => ['auth:user']], function ($router) {
