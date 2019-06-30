@@ -45,6 +45,7 @@ class AuthenticationController extends Controller
 
     public function login(Request $request)
     {
+        \Log::info(json_encode($request->all()));
         // 获取授权用户信息
         if (env('APP_ENV') == 'local') {
             $wx_user = [
