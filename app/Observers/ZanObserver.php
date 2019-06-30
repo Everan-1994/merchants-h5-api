@@ -13,12 +13,7 @@ class ZanObserver
     {
         // 活动报告 & 试用报告
         if ($zan->type < 3) {
-            $where = [
-                'user_id' => Auth::guard('user')->user()->id,
-                'type'    => $zan->type,
-                'type_id' => $zan->type_id,
-            ];
-            ExperienceReport::query()->where($where)->increment('like_times');
+            ExperienceReport::query()->where('id', $zan->type_id)->increment('like_times');
         }
 
         // 评论
@@ -31,12 +26,7 @@ class ZanObserver
     {
         // 活动报告 & 试用报告
         if ($zan->type < 3) {
-            $where = [
-                'user_id' => Auth::guard('user')->user()->id,
-                'type'    => $zan->type,
-                'type_id' => $zan->type_id,
-            ];
-            ExperienceReport::query()->where($where)->decrement('like_times');
+            ExperienceReport::query()->where('id', $zan->type_id)->decrement('like_times');
         }
 
         // 评论
