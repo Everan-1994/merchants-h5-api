@@ -21,11 +21,29 @@ class EnableCrossRequest
         $allow_origin = config('allowOriginHost');
 
         if (in_array($origin, $allow_origin)) {
-            $response->header('Access-Control-Allow-Origin', $origin);
-            $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, X-CSRF-TOKEN, Accept, Authorization, X-XSRF-TOKEN, X_Requested_With');
-            $response->header('Access-Control-Expose-Headers', 'Authorization, authenticated');
-            $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
-            $response->header('Access-Control-Allow-Credentials', 'true');
+            $IlluminateResponse = 'Illuminate\Http\Response';
+            $SymfonyResopnse = 'Symfony\Component\HttpFoundation\Response';
+            $headers = [
+                'Access-Control-Allow-Origin' => $origin,
+                'Access-Control-Allow-Methods' => 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers' => 'Origin, Content-Type, Cookie, X-CSRF-TOKEN, Accept, Authorization, X-XSRF-TOKEN, X_Requested_With',
+                'Access-Control-Expose-Headers' => 'Authorization, authenticated',
+                'Access-Control-Allow-Credentials' => 'true',
+            ];
+
+            if ($response instanceof $IlluminateResponse) {
+                foreach ($headers as $key => $value) {
+                    $response->header($key, $value);
+                }
+                return $response;
+            }
+
+            if ($response instanceof $SymfonyResopnse) {
+                foreach ($headers as $key => $value) {
+                    $response->headers->set($key, $value);
+                }
+                return $response;
+            }
         }
 
         return $response;
