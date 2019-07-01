@@ -105,8 +105,9 @@ $app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::cla
 /**
  * Config
  */
-$app->configure('allowOriginHost');
+
 $app->configure('errorCode');
+$app->configure('allowOriginHost');
 $app->configure('filesystems');
 /*
 |--------------------------------------------------------------------------
