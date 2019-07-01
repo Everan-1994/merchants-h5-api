@@ -18,6 +18,7 @@ class EnableCrossRequest
     {
         $response = $next($request);
         $origin = $request->server('HTTP_ORIGIN') ? $request->server('HTTP_ORIGIN') : '';
+        \Log::info('origin:' . $origin);
         $allow_origin = config('allowOriginHost');
 
         if (in_array($origin, $allow_origin)) {
