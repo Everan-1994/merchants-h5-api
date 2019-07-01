@@ -5,7 +5,7 @@ return [
     'allowedOrigins' => ['*'],
     'allowedOriginsPatterns' => [],
     'allowedHeaders' => ['*'],
-    'allowedMethods' => ['POST, GET, PUT, PATCH, OPTIONS, DELETE'],
+    'allowedMethods' => ['*'],
     'exposedHeaders' => [],
     'maxAge' => 0,
 ];

@@ -3,7 +3,6 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 $router->group([
     'prefix'     => 'admin', // 前缀
-    'middleware' => ['cors'],
 ], function ($router) {
     /* @var \Laravel\Lumen\Routing\Router $router */
 
@@ -210,7 +209,6 @@ $router->post('wechat', 'Api\AuthenticationController@server');
 $router->group([
     'prefix'     => 'api', // 前缀
     'namespace'  => 'Api',
-    'middleware' => ['cors'],
 ], function ($router) {
     /* @var \Laravel\Lumen\Routing\Router $router */
 
