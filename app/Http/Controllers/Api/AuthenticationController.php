@@ -168,6 +168,6 @@ class AuthenticationController extends Controller
     {
         $this->app->jssdk->setUrl($request->input('url'));
 
-        return $this->app->jssdk->buildConfig(["onMenuShareAppMessage","onMenuShareTimeline"], true);
+        return $this->app->jssdk->buildConfig(["onMenuShareAppMessage","onMenuShareTimeline"], false);
     }
 }
