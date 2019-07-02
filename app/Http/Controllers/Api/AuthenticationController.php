@@ -84,12 +84,10 @@ class AuthenticationController extends Controller
 
         }
 
-        if (User::FREEZE === $user['status']) {
-            $this->logout();
-
+        if (!$user['status']) {
             return response()->json([
                 'errorCode' => 1,
-                'message'   => '账号已被冻结，请联系管理员。',
+                'message'   => '该账号已被冻结',
             ]);
         }
 

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ApiResources\CommentResource;
+use App\Http\Resources\Admin\CommentResource;
 use App\Models\Comment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
 {
@@ -21,7 +20,7 @@ class CommentController extends Controller
             ->when($request->input('startTime') && $request->input('endTime'), function ($query) use ($request) {
                 $query->whereBetween('created_at', [
                     date('Y-m-d H:i:s', $request->input('startTime')),
-                    date('Y-m-d ' . '23:59:59', $request->input('endTime')),
+                    date('Y-m-d H:i:s', $request->input('endTime')),
                 ]);
             })
             ->when($request->filled('name'), function ($query) use ($request) {

@@ -35,7 +35,9 @@ class PrizeController extends Controller
             'status'      => 'nullable|int',
         ];
 
-        $params = $this->validate($request, $rules);
+        $params = $this->validate($request, $rules, [
+            'probability.int' => '概率必须为整数'
+        ]);
 
         if (!$this->totalProbability(0, $params['probability'])) {
             return $this->fail(400, '概率之和不能超过100');
@@ -68,7 +70,9 @@ class PrizeController extends Controller
         ];
 
         // 验证参数，如果验证失败，则会抛出 ValidationException 的异常
-        $params = $this->validate($request, $rules);
+        $params = $this->validate($request, $rules, [
+            'probability.int' => '概率必须为整数'
+        ]);
 
         $validator = Validator::make(['id' => $id], [
             'id' => 'required|int',

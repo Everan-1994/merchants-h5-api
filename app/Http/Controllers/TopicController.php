@@ -25,7 +25,7 @@ class TopicController extends Controller
             ->when($request->input('startTime') && $request->input('endTime'), function ($query) use ($request) {
                 $query->whereBetween('created_at', [
                     date('Y-m-d H:i:s', $request->input('startTime')),
-                    date('Y-m-d ' . '23:59:59', $request->input('endTime')),
+                    date('Y-m-d H:i:s', $request->input('endTime')),
                 ]);
             })
             ->when($request->filled('title'), function ($query) use ($request) {
