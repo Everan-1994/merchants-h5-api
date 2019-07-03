@@ -271,7 +271,7 @@ $router->group([
 
     $router->get('ts', function () {
         $now = \Carbon\Carbon::now();
-        echo $now->copy()->dayOfWeek;
+        echo $now->copy()->addDays(2)->toDateTimeString();
     });
 
 //    $router->get('ts', function () {p
