@@ -34,16 +34,17 @@ class TryUseLuckDog extends Command
         $now = Carbon::now();
         // 获取报名到期的活动
         $try_use = TryUse::query()
-            ->where('apply_end', $now->toDateTimeString())
+            ->where('apply_end', $now->copy()->format('Y-m-d H:i'))
             ->get();
 
         if (!empty($try_use)) {
             $try_use_ids = $try_use->pluck('id')->all(); // id 集合
-            $try_use_limits = $try_use->pluck('limit', 'id')->all(); // id => 上限 键值对
+            $try_use_stocks = $try_use->pluck('stock', 'id')->all(); // id => 上限 键值对
             $try_use_names = $try_use->pluck('name', 'id')->all(); // id => 活动名称 键值对
 
             // 获取报名数据
             $try_use_sign_ups = UseSignUp::query()->whereIn('use_id', $try_use_ids)
+                ->where('status', '=', 0)
                 ->orderBy('share_times', 'desc')
                 ->orderBy('created_at', 'asc')
                 ->get();
@@ -55,7 +56,7 @@ class TryUseLuckDog extends Command
             $sign_ids = []; // 符合规则的报名 id 集合
 
             foreach ($try_use_sign_group as $key => $item) {
-                $limit = $try_use_limits[$key];
+                $limit = $try_use_stocks[$key];
                 $name = $try_use_names[$key];
                 $signs = collect($item)->filter(function ($v, $i) use ($limit) {
                     return $i < $limit;

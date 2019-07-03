@@ -34,7 +34,7 @@ class ActivityLuckDog extends Command
         $now = Carbon::now();
         // 获取报名到期的活动
         $activity = Activity::query()
-            ->where('apply_end', $now->toDateTimeString())
+            ->where('apply_end', $now->copy()->format('Y-m-d H:i'))
             ->get();
 
         if (!empty($activity)) {
@@ -44,6 +44,7 @@ class ActivityLuckDog extends Command
 
             // 获取报名数据
             $activity_sign_ups = ActivitySignUp::query()->whereIn('activity_id', $activity_ids)
+                ->where('status', '=', 0)
                 ->orderBy('share_times', 'desc')
                 ->orderBy('created_at', 'asc')
                 ->get();

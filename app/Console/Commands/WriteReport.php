@@ -34,7 +34,7 @@ class WriteReport extends Command
         $now = Carbon::now();
         // 获取活动到期的活动列表
         $activity = Activity::query()
-            ->where('activity_end', $now->toDateTimeString())
+            ->where('activity_end', $now->copy()->format('Y-m-d H:i'))
             ->get();
 
         if (!empty($activity)) {

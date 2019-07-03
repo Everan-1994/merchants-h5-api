@@ -34,8 +34,8 @@ class WriteUseReport extends Command
         $now = Carbon::now();
         // 获取试用申请结束2天后的列表
         $try_use = TryUse::query()
-            // ->where('apply_end', $now->copy()->addDays(2)->toDateTimeString())
-            ->where('apply_end', $now->copy()->addMinutes(5)->toDateTimeString())
+            // ->where('apply_end', $now->copy()->subDays(2)->format('Y-m-d H:i'))
+            ->where('apply_end', $now->copy()->subMinutes(5)->format('Y-m-d H:i'))
             ->get();
 
         if (!empty($try_use)) {
