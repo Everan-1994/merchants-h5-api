@@ -40,7 +40,7 @@ class CheckInResource extends Resource
                     return -1; // 已过期
                 }
 
-                if ($check_in_times == 3 && Carbon::today()->eq(Carbon::parse(Carbon::parse($check_in_time)->toDateString()))) {
+                if ($check_in_times == 4 && Carbon::today()->eq(Carbon::parse(Carbon::parse($check_in_time)->toDateString()))) {
                     return 1; // 待抽奖
                 }
 
