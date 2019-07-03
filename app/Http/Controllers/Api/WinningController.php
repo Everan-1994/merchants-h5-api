@@ -132,8 +132,8 @@ class WinningController extends Controller
 
         if (!$builder->where('user_id', Auth::guard('user')->user()->id)
             ->whereBetween('created_at', [
-                $request->input('date') . '00:00:00',
-                $request->input('date') . '23:59:59',
+                $request->input('date') . ' 00:00:00',
+                $request->input('date') . ' 23:59:59',
             ])
             ->exists()) {
             return response([
