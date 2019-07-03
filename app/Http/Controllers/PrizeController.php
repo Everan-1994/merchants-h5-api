@@ -71,7 +71,9 @@ class PrizeController extends Controller
 
         // 验证参数，如果验证失败，则会抛出 ValidationException 的异常
         $params = $this->validate($request, $rules, [
-            'probability.int' => '概率必须为整数'
+            'probability.int' => '必须为整数'
+        ], [
+            'probability' => '中奖率'
         ]);
 
         $validator = Validator::make(['id' => $id], [
