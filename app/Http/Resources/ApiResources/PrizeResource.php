@@ -18,7 +18,6 @@ class PrizeResource extends Resource
             'id' => $this->id,
             'prize_name' => $this->prize_name,
             'prize_image' => $this->prize_image,
-            'selected' => $this->selected,
             'winning' => $this->status
         ];
     }

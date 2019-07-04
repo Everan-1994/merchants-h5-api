@@ -19,18 +19,32 @@ class PrizeController extends Controller
             ->select(['id', 'prize_name', 'prize_num', 'prize_image', 'probability', 'status'])
             ->get();
 
-        // 自定义奖品数组 id => probability
-        $prize_arr = Arr::pluck(optional($prizes)->toArray(), 'probability', 'id');
-
-        // 获取抽中的奖品 id
-        $prize_id = $this->getRand($prize_arr);
-
         // 对奖品列表进行中奖设置
-        foreach ($prizes as $key => $prize) {
-            $prizes[$key]['selected'] = $prize['id'] == $prize_id ? 1 : 0;
-        }
+        // foreach ($prizes as $key => $prize) {
+        //     $prizes[$key]['selected'] = $prize['id'] == $prize_id ? 1 : 0;
+        // }
 
         return response()->json(PrizeResource::collection($prizes));
+    }
+
+    /*
+     * 获取中奖物品
+     */
+    public function getWinningPrize()
+    {
+        $prizes = Prize::query()
+            ->select(['id', 'prize_name', 'prize_num', 'prize_image', 'probability', 'status'])
+            ->get();
+
+        // 自定义奖品数组 id => probability
+         $prize_arr = Arr::pluck(optional($prizes)->toArray(), 'probability', 'id');
+
+         // 获取抽中的奖品 id
+         $prize_id = $this->getRand($prize_arr);
+
+         return response([
+             'prize_id' => $prize_id
+         ]);
     }
 
     /**

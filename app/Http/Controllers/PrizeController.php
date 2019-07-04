@@ -36,7 +36,9 @@ class PrizeController extends Controller
         ];
 
         $params = $this->validate($request, $rules, [
-            'probability.int' => '概率必须为整数'
+            'probability.int' => '必须为整数'
+        ], [
+            'probability' => '中奖率'
         ]);
 
         if (!$this->totalProbability(0, $params['probability'])) {

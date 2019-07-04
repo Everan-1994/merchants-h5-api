@@ -229,6 +229,7 @@ $router->group([
         $router->post('check_in', 'CheckInController@add'); // 签到
         $router->get('check_in', 'CheckInController@index'); // 签到列表
 
+        $router->get('win_prize', 'PrizeController@getWinningPrize'); // 获取中奖奖品
         $router->post('winning_info', 'WinningController@add'); // 录入中奖信息
         $router->get('winning_info', 'WinningController@getWinningInfoByDate'); // 中奖信息
 

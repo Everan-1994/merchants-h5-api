@@ -36,7 +36,7 @@ class ActivityLuckDog extends Command
         $activity = Activity::query()
             ->where('apply_end', $now->copy()->format('Y-m-d H:i'))
             ->get();
-
+        \Log::info('activity:' . json_encode($activity));
         if (!empty($activity)) {
             $activity_ids = $activity->pluck('id')->all(); // id 集合
             $activity_limits = $activity->pluck('limit', 'id')->all(); // id => 上限 键值对
@@ -48,7 +48,7 @@ class ActivityLuckDog extends Command
                 ->orderBy('share_times', 'desc')
                 ->orderBy('created_at', 'asc')
                 ->get();
-
+            \Log::info('activity_sign_ups:' . json_encode($activity_sign_ups));
             // 报名列表按活动id分组
             $activity_sign_group = $activity_sign_ups->groupBy('activity_id');
 
@@ -75,7 +75,7 @@ class ActivityLuckDog extends Command
                     ];
                 }
             }
-
+            \Log::info('sign_list:' . json_encode($sign_list));
             if (!empty($sign_list)) {
                 \DB::beginTransaction();
                 try {
