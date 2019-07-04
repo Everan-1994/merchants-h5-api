@@ -9,7 +9,7 @@ class ExperienceReport extends ApiBaseModel
     protected $table = 'experience_reports';
 
     protected $fillable = [
-        'user_id', 'type', 'type_id', 'content', 'images', 'like_times'
+        'user_id', 'type', 'type_id', 'sign_id', 'content', 'images', 'like_times'
     ];
 
     public function user()
