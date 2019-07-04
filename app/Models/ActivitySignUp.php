@@ -28,7 +28,7 @@ class ActivitySignUp extends ApiBaseModel
      */
     public function report()
     {
-        return $this->hasOne(ExperienceReport::class, 'type_id', 'id')
+        return $this->hasOne(ExperienceReport::class, 'sign_id', 'id')
             ->where([
                 ['user_id', '=', Auth::guard('user')->user()->id],
                 ['type', '=', 1]

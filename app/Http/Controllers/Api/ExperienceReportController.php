@@ -58,6 +58,7 @@ class ExperienceReportController extends Controller
         $validator = Validator::make($request->all(), [
             'type'    => 'required|numeric',
             'type_id' => 'required|numeric',
+            'sign_id' => 'required|numeric',
             'images'  => 'nullable',
             'content' => 'required',
         ], [
@@ -65,6 +66,8 @@ class ExperienceReportController extends Controller
             'type.numeric'     => '类型id不能为字符串',
             'type_id.required' => '种类id不能为空',
             'type_id.numeric'  => '种类id不能为字符串',
+            'sign_id.required' => '报名id不能为空',
+            'sign_id.numeric'  => '报名id不能为字符串',
             'content.required' => '请填内容',
         ]);
 
@@ -80,6 +83,7 @@ class ExperienceReportController extends Controller
             'user_id' => Auth::guard('user')->user()->id,
             'type'    => $request->input('type'),
             'type_id' => $request->input('type_id'),
+            'sign_id' => $request->input('sign_id')
         ];
 
         try {
