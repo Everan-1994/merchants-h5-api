@@ -87,7 +87,7 @@ class AuthenticationController extends Controller
         if (!$user['status']) {
             return response()->json([
                 'errorCode' => 1,
-                'message'   => '该账号已被冻结',
+                'message'   => '账号已冻结',
             ]);
         }
 

@@ -72,13 +72,14 @@ $app->singleton('filesystem', function ($app) {
 */
 
 $app->middleware([
-     App\Http\Middleware\EnableCrossRequest::class, // 解决跨域
+    App\Http\Middleware\EnableCrossRequest::class, // 解决跨域
 ]);
 
 $app->routeMiddleware([
     'auth'          => App\Http\Middleware\Authenticate::class,
     'refresh.token' => App\Http\Middleware\RefreshToken::class, // 无断点刷新 token
     'permission'    => App\Http\Middleware\AdminPermission::class,
+    'check.status'  => App\Http\Middleware\CheckUserStatus::class, // 用户状态检测
     // 'cors'          => \Barryvdh\Cors\HandleCors::class, // 解决跨域
 ]);
 

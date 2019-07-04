@@ -224,7 +224,7 @@ $router->group([
 //    $router->get('menu', 'AuthenticationController@menu');
 
     // 需要授权登录才能访问
-    $router->group(['middleware' => ['auth:user']], function ($router) {
+    $router->group(['middleware' => ['auth:user', 'check.status']], function ($router) {
         /* @var \Laravel\Lumen\Routing\Router $router */
         $router->post('check_in', 'CheckInController@add'); // 签到
         $router->get('check_in', 'CheckInController@index'); // 签到列表
