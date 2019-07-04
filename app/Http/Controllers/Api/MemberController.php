@@ -155,7 +155,7 @@ class MemberController extends Controller
         if ($type == 1) {
             $builder = ActivitySignUp::query()->with(['activity', 'report']); // 参与的活动
         } else {
-            $builder = UseSignUp::query()->with(['try_use']); // 参与的试用
+            $builder = UseSignUp::query()->with(['try_use', 'report']); // 参与的试用
         }
 
         return $builder->where([
