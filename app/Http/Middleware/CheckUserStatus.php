@@ -16,7 +16,7 @@ class CheckUserStatus
         if (!User::query()->whereId($user_id)->value('status')) {
             Auth::guard('user')->logout(); // 退出
             return response([
-                'errorCode' => 1,
+                'errorCode' => 2,
                 'message'   => '账号已冻结',
             ]);
         }
