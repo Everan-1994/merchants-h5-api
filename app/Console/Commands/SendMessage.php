@@ -45,7 +45,7 @@ class SendMessage extends Command
             $this->app->template_message->send([
                 'touser'      => $item->user->openid,
                 'template_id' => env('TEMPLATE_LUCK_DOG'),
-                'url'         => '',
+                'url'         => env('RED_URL') . '/myReport',
                 'data'        => [
                     'first'    => '我们很高兴的通知你！',
                     'keyword1' => $keyword1,

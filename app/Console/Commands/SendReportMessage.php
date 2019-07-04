@@ -42,10 +42,12 @@ class SendReportMessage extends Command
                 '亲，记得填写『' . $item->title . '』的活动报告哟。' :
                 '亲，记得填写『' . $item->title . '』的试用报告哟。';
 
+            $uri = $item->type == 1 ? '/myActivity' : '/myTrial';
+
             $this->app->template_message->send([
                 'touser'      => $item->user->openid,
                 'template_id' => env('TEMPLATE_WRITE_REPORT'),
-                'url'         => '',
+                'url'         => env('RED_URL') . $uri,
                 'data'        => [
                     'first'    => '体验报告填写提醒！',
                     'keyword1' => $keyword1,
