@@ -221,7 +221,7 @@ $router->group([
 
     $router->post('login', 'AuthenticationController@login');
 
-//    $router->get('menu', 'AuthenticationController@menu');
+    $router->get('menu', 'AuthenticationController@menu');
 
     // 需要授权登录才能访问
     $router->group(['middleware' => ['auth:user', 'check.status']], function ($router) {

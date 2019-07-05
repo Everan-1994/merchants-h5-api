@@ -136,7 +136,7 @@ class AuthenticationController extends Controller
             [
                 "type" => "view",
                 "name" => "招商h5",
-                "url"  => 'http://mh5.lzdu.com/',
+                "url"  => 'http://zsh5.lzdu.com/',
             ],
         ];
 
