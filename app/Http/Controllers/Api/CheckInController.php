@@ -106,11 +106,11 @@ class CheckInController extends Controller
             ])
             ->value('check_in_times');
 
-        if ($week > 1) {
+        if ($week == 1) {
+            return 1;
+        } else {
             return $check_in_times + 1;
         }
-
-        return 1;
     }
 
     /**
