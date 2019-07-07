@@ -57,7 +57,7 @@ class ActivityController extends Controller
         }
 
         $activity_info = $builder->where('status', 1)
-            ->with(['signs', 'reports'])
+            ->with(['sign', 'reports'])
             ->find($id);
 
         return response(new ActivityResource($activity_info));

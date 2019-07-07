@@ -41,4 +41,13 @@ class Activity extends ApiBaseModel
     {
         return $this->hasMany(ActivitySignUp::class, 'activity_id', 'id')->select(['id', 'activity_id', 'contact_name', 'status']);
     }
+
+    /**
+     * 个人关联活动参与
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function sign()
+    {
+        return $this->hasOne(ActivitySignUp::class, 'activity_id', 'id')->select(['id', 'activity_id', 'contact_name', 'status']);
+    }
 }
