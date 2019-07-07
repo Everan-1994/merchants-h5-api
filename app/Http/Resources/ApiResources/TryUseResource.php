@@ -30,7 +30,7 @@ class TryUseResource extends Resource
             'status'        => self::tryUseStatus($this->apply_start, $this->apply_end),
             'apply_status'          => $this->when(
                 in_array('my', explode('/', $request->getRequestUri())),
-                self::applyStatus($this->apply_status, $this->apply_start, $this->apply_end)
+                self::applyStatus($this->apply_status ?: optional($this->sign)->status, $this->apply_start, $this->apply_end)
             ),
             'signs'         => UserAvatarResource::collection($this->signs),
             'reports'       => ExperienceReportResource::collection($this->whenLoaded('reports')),

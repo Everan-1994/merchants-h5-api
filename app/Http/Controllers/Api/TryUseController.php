@@ -57,7 +57,7 @@ class TryUseController extends Controller
             ]);
         }
 
-        $try_use_info = $builder->where('status', 1)->with(['signs', 'reports'])->find($id);
+        $try_use_info = $builder->where('status', 1)->with(['sign', 'reports'])->find($id);
 
         return response(new TryUseResource($try_use_info));
     }

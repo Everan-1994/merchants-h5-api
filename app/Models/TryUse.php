@@ -32,6 +32,17 @@ class TryUse extends ApiBaseModel
             ->with('user');
     }
 
+    /**
+     * 个人关联试用
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function sign()
+    {
+        return $this->hasOne(UseSignUp::class, 'use_id', 'id')
+            ->select(['id', 'use_id', 'user_id', 'contact_name', 'status'])
+            ->with('user');
+    }
+
     public function reports()
     {
         return $this->hasMany(ExperienceReport::class, 'type_id', 'id')
