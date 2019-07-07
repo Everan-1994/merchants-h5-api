@@ -107,9 +107,9 @@ class ActivityResource extends Resource
         $start_date = Carbon::parse($start_date); // 开始时间
         $end_date = Carbon::parse($end_date); // 结束时间
 
-        $apply_status = 2; // 申请成功
-
-        if ($status < 1) {
+        if ($status == 1) {
+            $apply_status = 2; // 申请成功
+        } else {
             if ($now->copy()->gte($start_date->copy()) && $now->copy()->lt($end_date->copy())) {
                 $apply_status = 1; // 申请中
             } else {
