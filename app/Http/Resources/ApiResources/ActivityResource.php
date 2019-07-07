@@ -38,7 +38,7 @@ class ActivityResource extends Resource
             'reports'               => ExperienceReportResource::collection($this->whenLoaded('reports')),
             'apply_status'          => $this->when(
                 in_array('my', explode('/', $request->getRequestUri())),
-                self::applyStatus($this->apply_status, $this->apply_start, $this->apply_end)
+                self::applyStatus($this->apply_status ?: $this->signs->status, $this->apply_start, $this->apply_end)
             ),
         ];
     }
