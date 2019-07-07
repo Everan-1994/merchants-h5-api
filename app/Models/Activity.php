@@ -39,6 +39,6 @@ class Activity extends ApiBaseModel
      */
     public function signs()
     {
-        return $this->hasMany(ActivitySignUp::class, 'activity_id', 'id')->select(['id', 'activity_id', 'contact_name']);
+        return $this->hasMany(ActivitySignUp::class, 'activity_id', 'id')->select(['id', 'activity_id', 'contact_name', 'status']);
     }
 }
