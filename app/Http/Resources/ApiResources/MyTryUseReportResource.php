@@ -18,7 +18,7 @@ class MyTryUseReportResource extends Resource
             'apply_end'   => Carbon::parse($this->apply_end)->format('Y-m-d'), // 申请结束时间
             'sign_id'     => $this->id, // 报名id
             'is_write'    => optional($this->report)->id > 0 ? 1 : 0,
-            'report_id'   => optional($this->report)->id > 0 ?: 0,
+            'report_id'   => optional($this->report)->id > 0 ? $this->report->id : 0,
         ];
     }
 }
