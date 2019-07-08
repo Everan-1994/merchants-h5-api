@@ -28,9 +28,11 @@ class TryUseResource extends Resource
             'product_intro' => $this->when(!empty($request->route('id')), json_decode($this->product_intro, true)),
             'apply_end'     => Carbon::parse($this->apply_end)->toDateTimeString(),
             'status'        => self::tryUseStatus($this->apply_start, $this->apply_end),
-            'apply_status'          => $this->when(
+            'apply_status'  => $this->when(
                 in_array('my', explode('/', $request->getRequestUri())),
-                self::applyStatus($this->apply_status ?: optional($this->sign)->status, $this->apply_start, $this->apply_end)
+                self::applyStatus(in_array($this->apply_status, [0, 1]) ?
+                    $this->apply_status :
+                    optional($this->sign)->status, $this->apply_start, $this->apply_end)
             ),
             'signs'         => UserAvatarResource::collection($this->signs),
             'reports'       => ExperienceReportResource::collection($this->whenLoaded('reports')),
