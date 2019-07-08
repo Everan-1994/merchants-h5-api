@@ -30,7 +30,8 @@ class TryUseResource extends Resource
             'status'        => self::tryUseStatus($this->apply_start, $this->apply_end),
             'apply_status'  => $this->when(
                 in_array('my', explode('/', $request->getRequestUri())),
-                self::applyStatus( is_numeric($this->apply_status) ?:
+                self::applyStatus( is_numeric($this->apply_status) ?
+                    $this->apply_status :
                     optional($this->sign)->status,
                     $this->apply_start, $this->apply_end
                 )
