@@ -211,10 +211,14 @@ class MemberController extends Controller
             ->paginate($page_size, ['*'], 'page', $page); // 所有活动申请
 
         // 获取申请的试用
-        $try_use_arr = optional($try_use)->map(function ($item, $key) {
-            $item['try_use']['apply_status'] = $item['status']; // 申请状态
-            return $item['try_use']; // 具体活动
-        });
+        if ($try_use->isNotEmpty()) {
+            $try_use_arr = optional($try_use)->map(function ($item, $key) {
+                $item['try_use']['apply_status'] = $item['status']; // 申请状态
+                return $item['try_use']; // 具体活动
+            });
+        } else {
+            $try_use_arr = [];
+        }
 
         return response([
             'data'  => TryUseResource::collection($try_use_arr),
