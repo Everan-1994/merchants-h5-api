@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Admin\ActivityResource;
 use App\Models\Activity;
+use App\Models\ActivitySignUp;
 use App\Traits\UpdateSort;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ActivityController extends Controller
@@ -189,15 +191,22 @@ class ActivityController extends Controller
         ]);
 
         $num = count($params['ids']);
-        $numDestroied = Activity::query()
-            ->whereIn('id', collect($params['ids']))
-            ->delete();
+        DB::beginTransaction();
+        try {
+            $numDestroied = Activity::query()
+                ->whereIn('id', collect($params['ids']))
+                ->delete();
 
-        if ($num == $numDestroied) {
-            return $this->success([], '删除成功');
+            ActivitySignUp::query()->whereIn('activity_id', $params['ids'])->delete();
+
+            if ($num == $numDestroied) {
+                DB::commit();
+                return $this->success([], '删除成功');
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $this->fail('删除失败');
         }
-
-        return $this->fail('删除失败');
     }
 
     /**

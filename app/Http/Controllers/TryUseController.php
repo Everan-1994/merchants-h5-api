@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Admin\TryUseResource;
 use App\Models\TryUse;
+use App\Models\UseSignUp;
 use App\Traits\UpdateSort;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class TryUseController extends Controller
@@ -176,15 +178,22 @@ class TryUseController extends Controller
         ]);
 
         $num = count($params['ids']);
-        $numDestroied = TryUse::query()
-            ->whereIn('id', collect($params['ids']))
-            ->delete();
+        DB::beginTransaction();
+        try {
+            $numDestroied = TryUse::query()
+                ->whereIn('id', collect($params['ids']))
+                ->delete();
 
-        if ($num == $numDestroied) {
-            return $this->success([], '删除成功');
+            UseSignUp::query()->whereIn('use_id', $params['ids'])->delete();
+
+            if ($num == $numDestroied) {
+                DB::commit();
+                return $this->success([], '删除成功');
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $this->fail('删除失败');
         }
-
-        return $this->fail('删除失败');
     }
 
     /**

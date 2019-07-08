@@ -44,8 +44,6 @@ class AppServiceProvider extends ServiceProvider
         Zan::observe(ZanObserver::class); // 点赞观察器
         Winning::observe(CheckInObserver::class); // 抽奖状态观察器
         Watch::observe(WatchObserver::class); // 视频观看观察器
-        Activity::observe(ActivityObserver::class); // 活动看观察器
-        TryUse::observe(TryUseObserver::class); // 试用看观察器
     }
 
     /**
