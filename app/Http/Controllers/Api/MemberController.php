@@ -184,14 +184,12 @@ class MemberController extends Controller
 
         // 获取申请的活动
         $activity_arr = optional($activity)->map(function ($item, $key) {
-            if ($item['activity']) {
-                $item['activity']['apply_status'] = $item['status']; // 申请状态
-                return $item['activity']; // 具体活动
-            }
+            $item['activity']['apply_status'] = $item['status']; // 申请状态
+            return $item['activity']; // 具体活动
         });
 
         return response([
-            'data'  => ActivityResource::collection(ollect(array_filter($activity_arr->toArray()))),
+            'data'  => ActivityResource::collection($activity_arr),
             'total' => $activity->total(),
         ]);
     }
@@ -214,14 +212,12 @@ class MemberController extends Controller
 
         // 获取申请的试用
         $try_use_arr = optional($try_use)->map(function ($item, $key) {
-            if ($item['try_use']) {
-                $item['try_use']['apply_status'] = $item['status']; // 申请状态
-                return $item['try_use']; // 具体活动
-            }
+            $item['try_use']['apply_status'] = $item['status']; // 申请状态
+            return $item['try_use']; // 具体活动
         });
 
         return response([
-            'data'  => TryUseResource::collection(collect(array_filter($try_use_arr->toArray()))),
+            'data'  => TryUseResource::collection($try_use_arr),
             'total' => $try_use->total(),
         ]);
     }
