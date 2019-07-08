@@ -31,12 +31,10 @@ class TryUseResource extends Resource
             'apply_status'  => $this->when(
                 in_array('my', explode('/', $request->getRequestUri())),
                 self::applyStatus( !is_null($this->apply_status) ?:
-                    optional($this->sign)->status, 
+                    optional($this->sign)->status,
                     $this->apply_start, $this->apply_end
                 )
             ),
-            'status1' => $this->apply_status,
-            'status2' => optional($this->sign)->status,
             'signs'         => UserAvatarResource::collection($this->signs),
             'reports'       => ExperienceReportResource::collection($this->whenLoaded('reports')),
         ];
