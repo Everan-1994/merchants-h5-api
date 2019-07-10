@@ -22,6 +22,8 @@ class ActivityController extends Controller
      */
     public function index(Request $request)
     {
+        app('db')->enableQueryLog();
+
         $activity = Activity::query()
             ->when($request->input('startTime') && $request->input('endTime'), function ($query) use ($request) {
                 $query->where('activity_start', '<=', date('Y-m-d H:i:s', $request->input('startTime')))
@@ -47,6 +49,8 @@ class ActivityController extends Controller
             ->orderBy($request->input('order', 'sort'), $request->input('sort', 'desc'))
             ->paginate($request->input('pageSize', 10), ['*'], 'page', $request->input('page', 1));
 
+        $log = app('db')->getQueryLog();
+        \Log::info('log:' . json_encode($log));
         return $this->success([
             'data'  => ActivityResource::collection($activity),
             'total' => $activity->total(),
