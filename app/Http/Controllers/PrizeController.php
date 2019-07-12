@@ -42,7 +42,7 @@ class PrizeController extends Controller
         ]);
 
         if (!$this->totalProbability(0, $params['probability'])) {
-            return $this->fail(400, '概率之和不能超过100');
+            return $this->fail(400, '奖品列表的中奖率总和不能超过100%');
         }
 
         $result = Prize::query()->create($params);
@@ -83,7 +83,7 @@ class PrizeController extends Controller
         ]);
 
         if (!$this->totalProbability($id, $params['probability'])) {
-            return $this->fail(400, '概率之和不能超过100');
+            return $this->fail(400, '奖品列表的中奖率总和不能超过100%');
         }
 
         $prize = Prize::query()->whereId($id)->update($params);
