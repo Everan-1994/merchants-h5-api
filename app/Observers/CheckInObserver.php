@@ -14,7 +14,7 @@ class CheckInObserver
 
         $where = [
             'user_id'        => $winning->user_id,
-            'check_in_times' => 7,
+            'check_in_times' => 4,
         ];
 
         CheckIn::query()
