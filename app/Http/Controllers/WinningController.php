@@ -31,6 +31,7 @@ class WinningController extends Controller
             ->when($request->filled('status'), function ($query) use ($request) {
                 $query->where('status', '=', $request->input('status'));
             })
+            ->where('prize_name', '!==', '谢谢参与')
             ->orderBy($request->input('order') ?: 'created_at', $request->input('sort') ?: 'desc')
             ->paginate($request->input('pageSize', 10), ['*'], 'page', $request->input('page', 1));
 
