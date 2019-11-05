@@ -1,7 +1,7 @@
 ## 第一步：clone 项目后在根目录 执行以下命令 进行项目依赖安装
 
 ```
-先切到 stage-one 分支 再执行 composer install
+composer install
 ```
 装完依赖后，根目录新建文件命名为 ```.env``` 复制以下内容为你的真实内容
 ```
