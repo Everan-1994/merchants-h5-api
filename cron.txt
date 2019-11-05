@@ -1,0 +1,1 @@
+* * * * * /usr/bin/php /Users/everan/Wei/everan/merchants-h5/merchants-h5-api/artisan schedule:run >> /dev/null 2>&1

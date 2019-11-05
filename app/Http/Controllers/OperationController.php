@@ -18,7 +18,7 @@ class OperationController extends Controller
             ->when($request->input('startTime') && $request->input('endTime'), function ($query) use ($request) {
                 return $query->whereBetween('createdAt', [
                     date('Y-m-d H:i:s', $request->input('startTime')),
-                    date('Y-m-d ' . '23:59:59', $request->input('endTime')),
+                    date('Y-m-d H:i:s', $request->input('endTime')),
                 ]);
             })
             ->when($request->has('username'), function ($query) use ($request) {

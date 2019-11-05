@@ -23,8 +23,10 @@ class CreateActivitiesTable extends Migration
             $table->timestamp('apply_end')->default(\DB::raw('CURRENT_TIMESTAMP'))->comment('活动报名时间结束');
             $table->timestamp('activity_start')->default(\DB::raw('CURRENT_TIMESTAMP'))->comment('活动开始时间');
             $table->timestamp('activity_end')->default(\DB::raw('CURRENT_TIMESTAMP'))->comment('活动结束时间');
-            $table->string('activity_intro')->comment('活动介绍');
+            $table->string('activity_intro', 1000)->comment('活动介绍');
             $table->text('content')->comment('商户介绍');
+            $table->tinyInteger('status')->default(1)->comment('状态：0关闭、1正常');
+            $table->integer('sort')->default(0)->comment('排序');
             $table->timestamps();
         });
     }

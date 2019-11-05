@@ -17,6 +17,7 @@ class CreateSuggestsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('user_name')->comment('姓名');
             $table->string('user_tel', 15)->comment('手机号');
             $table->string('message')->comment('留言');
             $table->timestamps();

@@ -15,5 +15,5 @@ class BlockItem extends BaseModel
 
     protected $table = 'block_items';
 
-    protected $fillable = ['blockId', 'title', 'description', 'url', 'imagePath', 'sort'];
+    protected $fillable = ['blockId', 'title', 'watch_times', 'front_cover', 'video', 'sort', 'status'];
 }

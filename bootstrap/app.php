@@ -79,6 +79,8 @@ $app->routeMiddleware([
     'auth'          => App\Http\Middleware\Authenticate::class,
     'refresh.token' => App\Http\Middleware\RefreshToken::class, // 无断点刷新 token
     'permission'    => App\Http\Middleware\AdminPermission::class,
+    'check.status'  => App\Http\Middleware\CheckUserStatus::class, // 用户状态检测
+    // 'cors'          => \Barryvdh\Cors\HandleCors::class, // 解决跨域
 ]);
 
 /*
@@ -98,10 +100,13 @@ $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(App\Providers\OperationServiceProvide::class);
 $app->register(Overtrue\LaravelWeChat\ServiceProvider::class);
+$app->register(Barryvdh\Cors\ServiceProvider::class);
+$app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);
 
 /**
  * Config
  */
+
 $app->configure('errorCode');
 $app->configure('allowOriginHost');
 $app->configure('filesystems');

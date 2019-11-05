@@ -46,17 +46,12 @@ return [
             'root' => storage_path('app'),
         ],
 
-        'oss' => [
-            'driver' => env('FILESYSTEM_DRIVER'),
-            'access_id' => env('ACCESSKEYID'),
-            'access_key' => env('ACCESSKEYSECRET'),
-            'bucket' => env('BUCKET'),
-            'endpoint' => env('ENDPOINT'), // OSS 外网节点或自定义外部域名
-            //'endpoint_internal' => '<internal endpoint [OSS内网节点] 如：oss-cn-shenzhen-internal.aliyuncs.com>', // v2.0.4 新增配置属性，如果为空，则默认使用 endpoint 配置
-            'cdnDomain' => 'cdn', // 如果isCName为true, getUrl会判断cdnDomain是否设定来决定返回的url，如果cdnDomain未设置，则使用endpoint来生成url，否则使用cdn
-            'ssl' => false, // true to use 'https://' and false to use 'http://'. default is false,
-            'isCName' => false, // 是否使用自定义域名,true: 则Storage.url()会使用自定义的cdn或域名生成文件url， false: 则使用外部节点生成url
-            'debug' => false,
+        'qiniu' => [
+            'driver'     => 'qiniu',
+            'access_key' => env('QINIU_ACCESS_KEY', 'xxxxxxxxxxxxxxxx'),
+            'secret_key' => env('QINIU_SECRET_KEY', 'xxxxxxxxxxxxxxxx'),
+            'bucket'     => env('QINIU_BUCKET', 'food-show'),
+            'domain'     => env('QINIU_DOMAIN', 'everan.lzdu.com'),
         ],
 
         //        'public' => [

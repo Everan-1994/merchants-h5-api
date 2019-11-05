@@ -34,81 +34,79 @@ class OperationServiceProvide extends ServiceProvider
 
     public function operationShutdown(Request $request)
     {
+        if (0 !== strpos($request->path(), 'admin')) {
+            return;
+        }
+
         $userId = Auth::id() ?? Cache::pull('userId');
-        $code = Cache::pull('errorCode_'.$userId);
-        $message = Cache::pull('message_'.$userId);
+        $code = Cache::pull('errorCode_' . $userId);
+        $message = Cache::pull('message_' . $userId);
 
-        try {
-            if (in_array($request->method(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+        if (in_array($request->method(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+            $agent = $this->app->make('Jenssegers\Agent\Agent');
+            $ips = $this->app->make('Zhuzhichao\IpLocationZh\Ip');
 
-                $agent = $this->app->make('Jenssegers\Agent\Agent');
-                $ips = $this->app->make('Zhuzhichao\IpLocationZh\Ip');
-
-                $userName = Auth::user()->username ?? Cache::get('userName');
-
-                // $uri = $request->path();
-                $method = $request->method();
-                $userAgent = $agent->getUserAgent();
+            $userName = Auth::user()->username ?? Cache::get('userName');
+            // $uri = $request->path();
+            $method = $request->method();
+            $userAgent = $agent->getUserAgent();
 //            $ip = $request->getClientIp();
-                $ip = $this->getIp();
+            $ip = $this->getIp();
 
-                $ipInfo = join(array_unique(array_filter($ips->find($ip))), '-');
+            $ipInfo = join(array_unique(array_filter($ips->find($ip))), '-');
 
-                // 全部路由
-                $routes = app()->router->getRoutes();
+            // 全部路由
+            $routes = app()->router->getRoutes();
 
-                $uri = '';
-                foreach ($routes as $item) {
-                    if (@$item['action']['uses'] == $request->route()[1]['uses'] && $item['method'] == $method) {
-                        if (OperationLog::ROUTER_PATH === $item['uri']) {
-                            $uri = '/'.$request->path();
-                        } else {
-                            $uri = $item['uri'];
-                        }
+            $uri = '';
+            foreach ($routes as $item) {
+                if (@$item['action']['uses'] == $request->route()[1]['uses'] && $item['method'] == $method) {
+                    if (OperationLog::ROUTER_PATH === $item['uri']) {
+                        $uri = '/' . $request->path();
+                    } else {
+                        $uri = $item['uri'];
                     }
                 }
-
-                // 路由名称
-                $where = ucfirst($method).':'.$uri;
-                $route = DB::table('actions')->where('route', $where)->value('name');
-
-                $data = [
-                    'username' => $userName,
-                    'uri' => $uri,
-                    'route' => $route ?? OperationLog::$routes[$uri],
-                    'method' => $method,
-                    'agent' => $userAgent,
-                    'ip' => $ip,
-                    'ipInfo' => $ipInfo,
-                    'code' => $code,
-                    'message' => $message,
-                ];
-
-                if ($request->all()) {
-                    $data['data'] = json_encode($request->all());
-                }
-
-                // 路由参数
-                $arrPath = array_filter(explode('/', $request->path()));
-                $arrUri = array_filter(explode('/', ltrim($uri, '/')));
-
-                if ($arrPath !== $arrUri) {
-                    $arrRoute = [];
-                    foreach ($arrPath as $k => $item) {
-                        if (!in_array($item, $arrUri)) {
-                            preg_match('/\b[a-zA-Z]+\b/', $arrUri[$k], $key);
-                            $arrRoute[$key[0]] = $item;
-                        }
-                    }
-                    if (!empty($arrRoute)) {
-                        $data['params'] = json_encode($arrRoute);
-                    }
-                }
-
-                OperationLog::query()->create($data);
             }
-        } catch (\Exception $exception) {
-            \Log::info('error:' . $exception->getMessage());
+
+            // 路由名称
+            $where = ucfirst($method) . ':' . $uri;
+            $route = DB::table('actions')->where('route', $where)->value('name');
+
+            $data = [
+                'username' => $userName,
+                'uri'      => $uri,
+                'route'    => $route ?? OperationLog::$routes[$uri],
+                'method'   => $method,
+                'agent'    => $userAgent,
+                'ip'       => $ip,
+                'ipInfo'   => $ipInfo,
+                'code'     => $code,
+                'message'  => $message,
+            ];
+
+            if ($request->all()) {
+                $data['data'] = json_encode($request->all());
+            }
+
+            // 路由参数
+            $arrPath = array_filter(explode('/', $request->path()));
+            $arrUri = array_filter(explode('/', ltrim($uri, '/')));
+
+            if ($arrPath !== $arrUri) {
+                $arrRoute = [];
+                foreach ($arrPath as $k => $item) {
+                    if (!in_array($item, $arrUri)) {
+                        preg_match('/\b[a-zA-Z]+\b/', $arrUri[$k], $key);
+                        $arrRoute[$key[0]] = $item;
+                    }
+                }
+                if (!empty($arrRoute)) {
+                    $data['params'] = json_encode($arrRoute);
+                }
+            }
+
+            OperationLog::query()->create($data);
         }
     }
 
