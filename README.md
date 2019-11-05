@@ -28,7 +28,7 @@ CACHE_DRIVER=file
 QUEUE_DRIVER=sync
 
 JWT_TTL=120
-JWT_SECRET=4m0QbCKnTxvB2HncxfkfDkRy07E7mATp27FCjB8FrmaN6lsTBeMskcAdsVV2UJV7
+JWT_SECRET=
 
 // 微信公众号配置
 WECHAT_OFFICIAL_ACCOUNT_APPID=appid
@@ -53,7 +53,9 @@ TEMPLATE_WRITE_REPORT= // 通知用户写报告的模板id 格式=》 {{first.DA
 
 ## 第三步：执行 以下命令 生成 jwt 密钥
 
-```php artisan jwt:secret```
+```
+php artisan jwt:secret
+```
 
 ## 第四步：修改计划任务脚本，根目录文件 ```cron.txt```
 服务器端使用 ```crontab``` 来执行计划任务，具体使用可百度
