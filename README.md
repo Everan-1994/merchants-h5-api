@@ -3,7 +3,7 @@
 ```
 composer install
 ```
-clone 完毕，根目录新建文件命名为 ```.env``` 复制以下内容为你的真实内容
+装完依赖后，根目录新建文件命名为 ```.env``` 复制以下内容为你的真实内容
 ```
 APP_ENV="merchants-h5-api"
 APP_LOCALE=zh-CN
